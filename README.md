@@ -121,19 +121,12 @@ finished and every ember can still be reached.
 
 You don't need your own PC for this. GitHub builds it on a Windows computer for you:
 
-1. Change the `version` in `package.json` (for example `1.0.1`).
-2. Make a tag with the same number and push it:
-
-   ```bash
-   git tag v1.0.1
-   ```
-
-   ```bash
-   git push origin v1.0.1
-   ```
-
-3. Watch the **Actions** tab on GitHub. After about 10 minutes, a new release appears on the
-   **Releases** page with two files:
+1. Change the `version` in `package.json` (for example `1.0.1`) and push that change.
+2. On the GitHub page, click **Releases** (right side), then **Draft a new release**.
+3. Click **Choose a tag**, type `v1.0.1` (the same number with a `v` in front), and click
+   **Create new tag**. Type a title like `Ember Hollow 1.0.1`, then click **Publish release**.
+4. Wait about 10 minutes (you can watch it in the **Actions** tab). Two files appear on
+   that release:
    - `Ember-Hollow-Setup-1.0.1.exe`: the installer for players.
    - `Ember-Hollow-Windows-for-Steam.zip`: the game folder you upload to Steam.
 
