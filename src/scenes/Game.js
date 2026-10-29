@@ -222,7 +222,8 @@ export class GameScene extends Phaser.Scene {
     this.player = this.physics.add.sprite(x, y, 'wick', 0).setOrigin(0.5, 124 / 128).setScale(0.58).setDepth(20);
     // body size is in un-scaled frame pixels: 42x80 becomes about 24x46 in the world
     this.player.body.setSize(42, 80).setOffset(43, 44);
-    this.player.body.setMaxVelocity(2000, PHYS.maxFall);
+    // Only falling speed is limited (in updatePlayer); mushrooms need to launch faster than that.
+    this.player.body.setMaxVelocity(2000, 3000);
     this.player.play('wick-idle');
     this.physics.add.collider(this.player, this.layer);
     this.physics.add.collider(this.player, this.spiritGroup);
@@ -357,6 +358,7 @@ export class GameScene extends Phaser.Scene {
     }
     if (b.velocity.y >= 0) this.jumpHeld = false;
     b.setGravityY(b.velocity.y > 0 ? PHYS.fallGravityBonus : 0);
+    if (b.velocity.y > PHYS.maxFall) b.setVelocityY(PHYS.maxFall);
 
     // animation
     let anim;
