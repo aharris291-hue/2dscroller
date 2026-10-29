@@ -1,8 +1,8 @@
 {
   "name": "ember-hollow",
   "productName": "Ember Hollow",
-  "version": "0.1.0",
-  "description": "A 2D side-scrolling platformer",
+  "version": "1.0.0",
+  "description": "Ember Hollow: a hand-painted watercolor platformer",
   "main": "electron/main.cjs",
   "type": "module",
   "scripts": {
@@ -11,39 +11,69 @@
     "preview": "vite preview",
     "app": "npm run build && node tools/ensure-electron.cjs && electron .",
     "dist": "npm run build && node tools/ensure-electron.cjs && electron-builder",
-    "dist:win": "npm run build && node tools/ensure-electron.cjs && electron-builder --win",
+    "dist:win": "npm run build && electron-builder --win",
     "dist:mac": "npm run build && node tools/ensure-electron.cjs && electron-builder --mac",
     "dist:linux": "npm run build && node tools/ensure-electron.cjs && electron-builder --linux",
-    "check": "node tools/check-levels.mjs"
+    "check": "node tools/check-levels.mjs",
+    "dist:steam": "npm run build && electron-builder --win dir"
   },
   "build": {
     "appId": "com.emberhollow.game",
     "productName": "Ember Hollow",
+    "copyright": "Ember Hollow",
     "files": [
       "dist/**/*",
-      "electron/**/*"
+      "electron/**/*",
+      "package.json"
     ],
     "directories": {
-      "output": "release"
+      "output": "release",
+      "buildResources": "build"
     },
     "win": {
-      "target": "dir"
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "dir",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "Ember Hollow",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false,
+      "artifactName": "Ember-Hollow-Setup-${version}.exe"
     },
     "mac": {
-      "target": "dir"
+      "target": "dir",
+      "icon": "build/icon.png"
     },
     "linux": {
-      "target": "dir"
+      "target": "dir",
+      "icon": "build/icon.png"
     }
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^38.8.6",
+    "electron-builder": "^26.0.12",
+    "vite": "^6.4.5",
     "@fontsource/nunito": "^5.3.0",
     "@fontsource/patrick-hand": "^5.3.0",
     "phaser": "^3.90.0"
   },
-  "devDependencies": {
-    "electron": "^38.8.6",
-    "electron-builder": "^26.0.12",
-    "vite": "^6.4.5"
-  }
+  "author": "Ember Hollow"
 }
