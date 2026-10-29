@@ -6,9 +6,10 @@ import { Controls } from '../game/input.js';
 import { audio } from '../game/audio.js';
 import { save } from '../game/save.js';
 import { Bubble } from '../ui/ui.js';
-import { PIP_BARKS, WICK_BARKS } from '../story/script.js';
+import { PIP_BARKS, WICK_BARKS, CUTSCENES } from '../story/script.js';
 import { Thornwolf } from '../game/thornwolf.js';
 import { CaveSystems } from '../game/cave.js';
+import { CliffSystems } from '../game/cliffs.js';
 
 const approach = (v, target, step) => (v < target ? Math.min(v + step, target) : Math.max(v - step, target));
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -55,6 +56,9 @@ export class GameScene extends Phaser.Scene {
     this.buildAtmosphere();
     if (L.boss) this.buildBoss();
     this.cave = new CaveSystems(this);
+    this.cliffs = new CliffSystems(this);
+    this.gliding = false;
+    this.feather = this.add.image(0, 0, 'feather').setScale(0.7).setDepth(21).setVisible(false);
     if (L.dark) this.near.setDepth(43);
     if (L.mode === 'cart') {
       // ride higher so Wick shows above the rim of the cart
@@ -104,7 +108,7 @@ export class GameScene extends Phaser.Scene {
     for (const { key, x } of L._painted.back) this.add.image(x, 0, key).setOrigin(0).setDepth(10);
 
     // An invisible tilemap does the collision work.
-    const data = L.grid.map((row) => [...row].map((ch) => (ch === '#' || ch === 'B' ? 0 : ch === '=' || ch === 'r' ? 1 : -1)));
+    const data = L.grid.map((row) => [...row].map((ch) => (ch === '#' || ch === 'B' ? 0 : ch === '=' || ch === 'r' || ch === 'c' ? 1 : -1)));
     const map = this.make.tilemap({ data, tileWidth: TILE, tileHeight: TILE });
     const tiles = map.addTilesetImage('collide', 'collide', TILE, TILE, 0, 0);
     this.layer = map.createLayer(0, tiles, 0, 0).setVisible(false);
@@ -225,6 +229,18 @@ export class GameScene extends Phaser.Scene {
           s.dir = -1;
           break;
         }
+        case 'bat': {
+          const s = this.enemies.create(p.x, p.y - TILE / 2, 'gloombat').setScale(0.7).setDepth(14);
+          s.body.setAllowGravity(false).setSize(44, 36).setOffset(28, 16);
+          s.play({ key: 'gloombat-fly', startFrame: Math.floor(Math.random() * 2) });
+          s.kind = 'bat';
+          s.home = { x: p.x, y: p.y - TILE / 2 };
+          s.range = (e.range ?? 3) * TILE;
+          s.vrange = (e.vrange ?? 0.6) * TILE;
+          s.phase = Math.random() * Math.PI * 2;
+          s.t = 0;
+          break;
+        }
         case 'hopper': {
           const s = this.enemies.create(p.x, p.y, 'hopper', 0).setOrigin(0.5, 92 / 96).setScale(0.5).setDepth(14);
           s.body.setSize(60, 44).setOffset(18, 48);
@@ -235,7 +251,7 @@ export class GameScene extends Phaser.Scene {
         default:
       }
     }
-    this.physics.add.collider(this.enemies, this.layer);
+    this.physics.add.collider(this.enemies, this.layer, null, (en) => en.kind !== 'bat');
     this.checkpoint = { ...this.startPos };
   }
 
@@ -319,6 +335,7 @@ export class GameScene extends Phaser.Scene {
     this.updateEnemies(dt);
     if (this.boss && !this.frozen && !this.completed) this.boss.update(dt, this.player);
     this.cave.update(dt);
+    this.cliffs.update(dt);
     this.updateCompanions(time / 1000);
     this.events.emit('tick');
   }
@@ -413,9 +430,29 @@ export class GameScene extends Phaser.Scene {
     b.setGravityY(b.velocity.y > 0 ? PHYS.fallGravityBonus : 0);
     if (b.velocity.y > PHYS.maxFall) b.setVelocityY(PHYS.maxFall);
 
+    // Feather Glide: hold jump while falling to drift down slowly. Wind updrafts lift a glider.
+    const canGlide = (save.data.glide || this.level.glide) && this.hasPip && !cart;
+    const wind = this.cliffs.windAt(pl.x, pl.y - 20);
+    this.gliding = canGlide && !onGround && c.down('jump') && (b.velocity.y > 0 || (wind && !this.jumpHeld));
+    // Gravity itself is changed (not just the speed) so gliding feels the same at any frame rate.
+    if (this.gliding) {
+      if (wind) {
+        b.setGravityY(-PHYS.gravity - 1400);
+        if (b.velocity.y < -PHYS.windLift) b.setVelocityY(-PHYS.windLift);
+      } else {
+        b.setGravityY(-PHYS.gravity + 250);
+        if (b.velocity.y > PHYS.glideFall) b.setVelocityY(PHYS.glideFall);
+      }
+    } else if (wind && !onGround) {
+      b.setGravityY(-900);
+    }
+    this.feather.setVisible(this.gliding);
+    if (this.gliding) this.feather.setPosition(pl.x + this.facing * 6, pl.y - 74).setRotation(Math.sin(this.time.now / 160) * 0.25);
+
     // animation
     let anim;
     if (this.castTimer > 0) { this.castTimer -= dt; anim = 'wick-cast'; }
+    else if (this.gliding) anim = 'wick-cast';
     else if (!onGround) anim = b.velocity.y < 0 ? 'wick-jump' : 'wick-fall';
     else if (Math.abs(vx) > 30 && !cart) anim = 'wick-run';
     else anim = 'wick-idle';
@@ -472,6 +509,15 @@ export class GameScene extends Phaser.Scene {
     for (const e of this.enemies.getChildren()) {
       if (e.freed || !e.body) continue;
       const b = e.body;
+      if (e.kind === 'bat') {
+        if (!this.frozen) e.t += dt;
+        const nx = e.home.x + Math.sin(e.t * 0.9 + e.phase) * e.range;
+        const ny = e.home.y + Math.sin(e.t * 1.8 + e.phase) * e.vrange;
+        e.setFlipX(nx < e.x);
+        e.setPosition(nx, ny);
+        b.setVelocity(0, 0);
+        continue;
+      }
       if (e.kind === 'gloomling') {
         if (this.frozen) { b.setVelocityX(0); continue; }
         if (b.blocked.left) e.dir = 1;
@@ -504,7 +550,7 @@ export class GameScene extends Phaser.Scene {
   solidAt(x, y) {
     const c = Math.floor(x / TILE), r = Math.floor(y / TILE);
     if (c < 0 || c >= this.cols || r < 0 || r >= this.rows) return false;
-    return '#B=r'.includes(this.level.grid[r][c]);
+    return '#B=rc'.includes(this.level.grid[r][c]);
   }
 
   // ------------------------------------------------------------ interactions
@@ -583,6 +629,7 @@ export class GameScene extends Phaser.Scene {
     for (const h of this.hazards) {
       if (Phaser.Geom.Rectangle.Overlaps(box, h)) { this.hurt(false); return; }
     }
+    if (this.cliffs.hits(box)) { this.hurt(false); return; }
     const hit = this.cave.hits(box);
     if (hit) { this.hurt(hit === 'water'); return; }
     const now = this.time.now;
@@ -596,13 +643,11 @@ export class GameScene extends Phaser.Scene {
     for (const t of this.triggers) {
       if (this.fired.has(t.event) || this.player.x < t.x) continue;
       this.fired.add(t.event);
-      if (t.event === 'C3') {
-        if (save.data.seen.C3 && save.data.glow) continue;
-        this.playCutscene('C3', () => {
-          save.data.glow = true;
-          save.write();
-          this.pipSay('glow');
-        });
+      // A trigger named after a cutscene plays it in the middle of the level.
+      // Abilities it unlocks (Glow, Glide) are saved by the cutscene itself.
+      if (CUTSCENES[t.event]) {
+        if (save.data.seen[t.event]) continue;
+        this.playCutscene(t.event, () => this.pipSay('glow'));
       }
     }
   }

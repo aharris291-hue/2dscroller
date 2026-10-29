@@ -10,6 +10,7 @@ export const SPEAKERS = {
   thornwolf: { name: 'The Thornwolf', color: '#5a3a5a' },
   haru: { name: 'Haru', color: '#8a8070' },
   nell: { name: 'Nell', color: '#c9a030' },
+  wren: { name: 'Wren', color: '#a8784a' },
 };
 
 // Cutscenes are lists of steps. `shot` changes the painted panel, `say` shows a
@@ -59,6 +60,7 @@ export const CUTSCENES = {
     { say: 'mossback', text: 'Ah. That is... no ordinary ember. That is... a piece of her. She sent you, didn\'t she, little spark.' },
     { shot: 'mossback-gift' },
     { say: 'mossback', text: 'Take this. The forest has forgotten... how to see. Your light will... remind it.' },
+    { unlock: 'glow' },
     { title: "Pip's Glow", sub: 'Press X, C or the Y button to glow and reveal spirit paths.' },
   ],
   C4a: [
@@ -131,7 +133,56 @@ Object.assign(CUTSCENES, {
     { say: 'wick', text: "My grandpa says a lantern isn't for seeing. It's so others can see YOU. So she knows you're here." },
     { say: 'nell', text: "That's very sappy." },
     { say: 'nell', text: 'Come back, okay? Wake everyone up and then come back.' },
-    { title: 'End of Chapter 2', sub: 'Thank you for playing! Chapter 3: Dusk Cliffs is on its way.' },
+    { title: 'End of Chapter 2', sub: 'Next: Chapter 3, Dusk Cliffs' },
+  ],
+});
+
+Object.assign(CUTSCENES, {
+  C6b: [
+    { shot: 'cliffs-arrive' },
+    { say: 'narrator', text: 'Above the caves, the Dusk Cliffs. The sun has hung halfway down the sky for three whole winters.' },
+    { say: 'wick', text: "It's so quiet. No wind at all." },
+    { say: 'pip', text: 'Birds. Not... flying.' },
+    { say: 'wick', text: "They're just sitting there. Like they forgot how." },
+  ],
+  C7: [
+    { shot: 'post-office' },
+    { say: 'wren', text: "Three thousand letters, dear. And not a breath of wind to fly on. A post owl who can't fly. Ridiculous." },
+    { say: 'wick', text: "I'm going to the Hearth. Maybe I can get the wind back." },
+    { say: 'wren', text: "The Hearth! Then you must take this. It's been in the dead-letter box for... oh... three hundred years." },
+    { shot: 'wren-letter' },
+    { say: 'wren', text: '"Dear Ash. Today you told me you are getting old, and you laughed, as if it were nothing."' },
+    { say: 'wren', text: '"I did not laugh. I have watched every fire in this valley go out. Candles. Stars. You will not be one of them."' },
+    { say: 'wren', text: '"I will find a way to keep the wind and the years away from you, I promise. Your Morrow."' },
+    { say: 'wick', text: "Who's Morrow?" },
+    { say: 'wren', text: 'A little grey moth. He followed her light everywhere, the darling. Then one day he wasn\'t anywhere. About the time the Hush began, now I think of it.' },
+    { say: 'pip', text: '...Morrow. I know that name.' },
+    { shot: 'post-office' },
+    { say: 'wren', text: "Here. One of my flight feathers. For gliding. You'll fly better than me at the moment, dear." },
+    { unlock: 'glide' },
+    { title: 'Feather Glide', sub: 'Hold jump while falling to glide. Glide into rising wind to soar upward!' },
+  ],
+  C7b: [
+    { shot: 'kite-memory' },
+    { say: 'pip', text: 'Wick... I remember her. The big fox. She sang to us. Every night, she sang.' },
+    { say: 'wick', text: 'Grandmother Ash?' },
+    { say: 'pip', text: 'And someone small and grey sat by her and listened. He never sang. He just... listened.' },
+    { say: 'wick', text: 'Morrow. The letter said he wanted to keep the years away from her.' },
+    { say: 'wick', text: "Pip... what if the Hush isn't a monster? What if it's someone who's scared?" },
+    { say: 'pip', text: 'Like the wolf.' },
+    { say: 'wick', text: 'Like the wolf.' },
+  ],
+  C8: [
+    { shot: 'wind-returns' },
+    { say: 'wren', text: "Oh! Oh, I'd forgotten! Hold on, dear!" },
+    { shot: 'wren-flight' },
+    { say: 'pip', text: "Look, Wick. All the little lights. That's US." },
+    { say: 'wick', text: "The woods... the caves... every lantern we lit is still burning." },
+    { shot: 'hearth-wings' },
+    { say: 'wick', text: 'Pip. Those wings. Wrapped around the Hearth.' },
+    { say: 'pip', text: '...Morrow.' },
+    { say: 'wren', text: "This is as far as an old owl goes. Here, take this letter. Deliver it for me. In person." },
+    { title: 'End of Chapter 3', sub: 'Thank you for playing! Chapter 4: The Hollow Heart is on its way.' },
   ],
 });
 
@@ -172,6 +223,18 @@ export const PETALS = {
   '2-3c': 'Water fills any space that warmth leaves behind.',
   '2-Fa': 'The foreman wrote in her logbook every night: "All safe. All warm."',
   '2-Fb': 'The last entry reads: "Something grey in the tunnels. Will check in the morning."',
+  '3-1a': 'Morrow counted the candles that went out each winter. He stopped sleeping.',
+  '3-1b': 'He asked the wind to stop blowing on her flame. The wind laughed and blew anyway.',
+  '3-1c': 'So Morrow asked the wind again, and again, until the wind grew tired and lay down.',
+  '3-2a': '"Don\'t be afraid of endings," Ash said. Morrow was afraid anyway.',
+  '3-2b': 'Wren delivered his letters every day for a year. Then the letters stopped.',
+  '3-2c': 'The last letter was never sent. It sat in the dead-letter box, waiting.',
+  '3-3a': 'Ash sang to the little spirits every night, so they would not fear the dark.',
+  '3-3b': 'Morrow never sang. He sat beside her and held very still, so the song would last.',
+  '3-3c': '"Everything that burns goes out," Morrow whispered. "Not you. Not you."',
+  '3-Fa': 'The night of the Hush, the wind stopped everywhere at once.',
+  '3-Fb': 'Grey wings, wide as clouds, folded gently around the Great Hearth.',
+  '3-Fc': 'Inside, a fire tried to breathe, and could not.',
   '2-Fc': 'In the margin, a small lantern is drawn in a child\'s hand. Under it: "For Mum."',
 };
 
@@ -179,6 +242,7 @@ export const PETALS = {
 export const PIP_BARKS = {
   0: { ember: ['Fwip!', 'Fwip fwip!'], fall: ['Fweee--'], free: ['(happy spin)'], idle: ['(yawns a little spark)'], glow: ['Fwip!'] },
   1: { ember: ['Warm!', 'Warm!', 'More!'], fall: ['Wick?!'], free: ['Go home!', 'Warm now!'], idle: ['Sleepy...?'], glow: ['Look!', 'See?'], water: ['Nope.'] },
+  3: { ember: ['That one sang to me.', 'Warm wind!', 'More!'], fall: ['Glide next time!', 'Fwee--'], free: ['There. Better.', 'Fly home!'], idle: ['Nice view.'], glow: ['Shine!', 'Look!'], water: ["I'm brave. I'm brave."] },
   2: { ember: ['More! More!', 'Shiny!', 'More!'], fall: ["We don't do holes."], free: ['Bye, friend!', 'Go home!'], idle: ["Are we lost? We're lost."], glow: ['Bright!', 'Look!'], water: ['NOPE.', 'No water. No.', 'NOPE. Nope nope.'] },
 };
 
@@ -192,4 +256,5 @@ export const CHAPTER_NAMES = {
   0: 'Prologue: The Last Lantern',
   1: 'Chapter 1: Whispering Woods',
   2: 'Chapter 2: Glimmer Caves',
+  3: 'Chapter 3: Dusk Cliffs',
 };

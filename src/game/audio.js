@@ -14,6 +14,8 @@ const SONGS = {
   caves: { bpm: 80, chords: [[50, 'min'], [53, 'maj'], [48, 'maj'], [45, 'min'], [50, 'min'], [46, 'maj'], [48, 'sus'], [45, 'maj']], seed: 61, melody: 0.6, pad: true },
   cart: { bpm: 144, chords: [[52, 'min'], [48, 'maj'], [55, 'maj'], [50, 'maj']], seed: 71, melody: 0.9, pad: false, drums: true },
   flood: { bpm: 132, chords: [[50, 'min'], [46, 'maj'], [53, 'maj'], [45, 'maj']], seed: 81, melody: 0.85, pad: true, drums: true },
+  cliffs: { bpm: 90, chords: [[52, 'min'], [48, 'maj'], [55, 'maj'], [50, 'maj'], [52, 'min'], [45, 'min'], [48, 'maj'], [50, 'sus']], seed: 91, melody: 0.7, pad: true },
+  storm: { bpm: 138, chords: [[45, 'min'], [53, 'maj'], [48, 'maj'], [55, 'maj']], seed: 101, melody: 0.9, pad: true, drums: true },
   cutscene: { bpm: 60, chords: [[50, 'min'], [46, 'maj'], [53, 'maj'], [48, 'maj']], seed: 5, melody: 0.35, pad: true },
 };
 const TRIADS = { maj: [0, 4, 7], min: [0, 3, 7], sus: [0, 5, 7] };
@@ -173,6 +175,7 @@ class Audio {
       case 'bramble': this.whoosh({ dur: 0.12, vol: 0.06, from: 2500, to: 900, q: 2 }); break;
       case 'dash': this.whoosh({ dur: 0.22, vol: 0.16, from: 800, to: 4000, q: 1.5 }); this.tone({ freq: 520, slide: 2, dur: 0.18, vol: 0.06 }); break;
       case 'splash': this.whoosh({ dur: 0.5, vol: 0.18, from: 1500, to: 300, q: 0.8 }); break;
+      case 'thunder': this.whoosh({ dur: 1.4, vol: 0.3, from: 300, to: 60, q: 0.5 }); this.tone({ freq: 55, dur: 1.2, vol: 0.2, slide: 0.6 }); break;
       case 'hop': this.tone({ freq: 160, slide: 1.8, dur: 0.12, vol: 0.06 }); break;
       default:
     }

@@ -7,6 +7,7 @@ import { drawWick, drawPip, drawGrandpa, drawMossback, INK } from './characters.
 import { ensureBackground } from './world.js';
 import { drawThornwolf, drawHaruSleeping } from './thornwolf.js';
 import { drawNell } from './caves.js';
+import { drawWren, drawBird, drawFeather } from './cliffs.js';
 
 function layer(scene, ctx, key, dx = 0, dy = 0, alpha = 1) {
   ctx.save();
@@ -65,6 +66,18 @@ function caveRoom(scene, ctx, rand, office = true) {
     glow(ctx, 280, 340, 70, '#ffcf7a', 0.6);
   }
   for (let i = 0; i < 5; i++) glow(ctx, 100 + rand() * 1080, 120 + rand() * 300, 30 + rand() * 30, '#7ad8f0', 0.35);
+}
+
+function cliffSky(scene, ctx) {
+  layer(scene, ctx, 'sky-cliffs');
+  layer(scene, ctx, 'far-cliffs');
+  layer(scene, ctx, 'mid-cliffs', 0, 40);
+}
+
+function tracePolyLocal(ctx, pts) {
+  ctx.beginPath();
+  pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+  ctx.closePath();
 }
 
 function paint2(ctx, color) {
@@ -250,6 +263,119 @@ const SHOTS = {
     drawWick(ctx, 420, 470, 2.0, { eyes: 'open' });
     drawPip(ctx, 490, 280, 1.5, {});
   },
+  'cliffs-arrive'(scene, ctx, rand) {
+    cliffSky(scene, ctx, rand);
+    ground(ctx, 500, '#7a4a48', rand, ['#f0c070', '#c98a48']);
+    for (const [bx, by] of [[760, 498], [800, 496], [840, 499], [1010, 497], [1050, 498]]) drawBird(ctx, bx, by, 2.2, { color: ['#6a7a9a', '#9a6a5a', '#7a8a5a'][Math.floor(rand() * 3)] });
+    drawWick(ctx, 360, 510, 2.3, { eyes: 'open' });
+    drawPip(ctx, 430, 300, 1.8, { mood: 'worried' });
+  },
+  'post-office'(scene, ctx, rand) {
+    // inside the Sky Post Office: towering shelves of letters
+    ctx.fillStyle = '#5a3a34'; ctx.fillRect(0, 0, W, H);
+    for (let sx = 0; sx < W; sx += 160) {
+      for (let sy = 40; sy < 480; sy += 60) {
+        ctx.fillStyle = '#7a5040'; ctx.fillRect(sx + 10, sy + 44, 140, 8);
+        for (let k = 0; k < 9; k++) { ctx.fillStyle = rand() < 0.5 ? '#f4ead4' : '#e8d8b8'; ctx.fillRect(sx + 16 + k * 15, sy + 14 + rand() * 6, 11, 30); }
+      }
+    }
+    glow(ctx, 640, 200, 420, '#ffcf7a', 0.35);
+    ground(ctx, 500, '#6a4434', rand);
+    for (let i = 0; i < 40; i++) { ctx.save(); ctx.translate(500 + rand() * 360, 470 + rand() * 30); ctx.rotate(rand()); ctx.fillStyle = '#f4ead4'; ctx.fillRect(-10, -7, 20, 14); ctx.restore(); }
+    drawWren(ctx, 780, 510, 2.2, {}, true);
+    drawWick(ctx, 330, 510, 2.2, { eyes: 'open' });
+    drawPip(ctx, 400, 310, 1.7, {});
+  },
+  'wren-letter'(scene, ctx, rand) {
+    ctx.fillStyle = '#3a2a2a'; ctx.fillRect(0, 0, W, H);
+    glow(ctx, 640, 300, 420, '#ffcf7a', 0.4);
+    // the old letter, sealed with a moth-wing stamp of grey wax
+    ctx.save(); ctx.translate(640, 280); ctx.rotate(-0.04);
+    wash(ctx, [[-300, -170], [300, -180], [310, 170], [-290, 180]], '#f2e6cc', rand, { layers: 4, alpha: 0.9, edge: 0.5 });
+    ctx.fillStyle = INK; ctx.font = 'italic 24px Nunito, sans-serif';
+    ['Dear Ash,', 'Today you told me you are getting old,', 'and you laughed, as if it were nothing...', '', '                         Your Morrow'].forEach((l, i) => ctx.fillText(l, -250, -100 + i * 40));
+    ctx.beginPath(); ctx.arc(220, 120, 34, 0, Math.PI * 2); ctx.fillStyle = '#8a8890'; ctx.fill(); ctx.strokeStyle = INK; ctx.lineWidth = 3; ctx.stroke();
+    ctx.fillStyle = '#b8b4c0';
+    for (const sd of [-1, 1]) { ctx.beginPath(); ctx.ellipse(220 + sd * 13, 116, 14, 9, sd * 0.5, 0, Math.PI * 2); ctx.fill(); }
+    ctx.restore();
+  },
+  'kite-memory'(scene, ctx, rand) {
+    cliffSky(scene, ctx, rand);
+    for (let i = 0; i < 6; i++) {
+      const kx = 120 + i * 200, ky = 80 + rand() * 180;
+      ctx.strokeStyle = rgba(INK, 0.4); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(kx, ky); ctx.quadraticCurveTo(kx - 40, ky + 200, kx - 20, 500); ctx.stroke();
+      wash(ctx, [[kx, ky - 30], [kx + 22, ky], [kx, ky + 34], [kx - 22, ky]], ['#e8604a', '#f0c060', '#6aa0c8'][i % 3], rand, { layers: 2, alpha: 0.85, edge: 0.6 });
+    }
+    ground(ctx, 500, '#9a7048', rand, ['#f0c070', '#c98a48']);
+    // a remembered fox of fire, singing, faint in the sky
+    ctx.save(); ctx.globalAlpha = 0.35; glow(ctx, 900, 220, 200, '#ffb060', 0.8); ctx.restore();
+    drawWick(ctx, 420, 510, 2.3, { eyes: 'open' });
+    drawPip(ctx, 560, 300, 2.2, { mood: 'happy' });
+  },
+  'wind-returns'(scene, ctx, rand) {
+    layer(scene, ctx, 'sky-storm');
+    layer(scene, ctx, 'far-storm');
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+    for (let i = 0; i < 30; i++) { const y = rand() * 460; const x = rand() * W; ctx.beginPath(); ctx.moveTo(x, y); ctx.quadraticCurveTo(x + 80, y - 20, x + 180, y); ctx.stroke(); }
+    for (let i = 0; i < 30; i++) drawBird(ctx, rand() * W, 60 + rand() * 300, 1.4, { flying: true });
+    ground(ctx, 500, '#5a3a40', rand);
+    drawWren(ctx, 820, 470, 2.0, { wings: 1, flying: true }, true);
+    drawWick(ctx, 380, 510, 2.2, { eyes: 'open', scarf: 14, cloakBack: 14, hoodTip: 10 });
+    drawPip(ctx, 450, 310, 1.7, {});
+  },
+  'wren-flight'(scene, ctx, rand) {
+    // over the valley at night: a trail of every lantern Wick has lit
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, '#1a1838'); g.addColorStop(1, '#4a3a5a');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    for (let i = 0; i < 160; i++) { ctx.fillStyle = rgba('#ffffff', rand() * 0.6); ctx.fillRect(rand() * W, rand() * H * 0.5, 2, 2); }
+    wash(ctx, [[-20, H + 20], [-20, 420], [300, 380], [700, 430], [1000, 390], [W + 20, 420], [W + 20, H + 20]], '#2a2440', rand, { layers: 3, alpha: 0.8 });
+    let lx = 80, ly = 600;
+    for (let i = 0; i < 26; i++) { lx += 40 + rand() * 20; ly -= 6 + rand() * 4; glow(ctx, lx, ly, 14, '#ffcf7a', 0.9); }
+    // Wren carries Wick gently in her talons
+    drawWick(ctx, 640, 430, 1.0, { eyes: 'open', scarf: 16, cloakBack: 16, hoodTip: 10, legA: 0.4, legB: -0.3 });
+    drawWren(ctx, 640, 300, 1.6, { wings: 1, flying: true });
+    ctx.strokeStyle = '#d8a048'; ctx.lineWidth = 5; ctx.lineCap = 'round';
+    for (const tx of [-14, 14]) { ctx.beginPath(); ctx.moveTo(640 + tx, 296); ctx.lineTo(640 + tx * 0.6, 352); ctx.stroke(); }
+    drawPip(ctx, 720, 380, 1.2, {});
+  },
+  'hearth-wings'(scene, ctx, rand) {
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, '#141020'); g.addColorStop(1, '#3a2030');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    glow(ctx, 640, 360, 360, '#ff9a50', 0.25);
+    wash(ctx, [[560, 720], [600, 300], [680, 300], [720, 720]], '#2e1e24', rand, { layers: 4, alpha: 0.6 });
+    // vast moth wings like burnt paper, folded around the tree
+    for (const side of [-1, 1]) {
+      const lobe = (cx, cy, rx, ry, rot) => {
+        const pts = [];
+        for (let i = 0; i < 26; i++) {
+          const a = (i / 26) * Math.PI * 2;
+          const wob = 1 + (rand() - 0.5) * 0.08;
+          pts.push([cx + Math.cos(a) * rx * wob * Math.cos(rot) - Math.sin(a) * ry * wob * Math.sin(rot), cy + Math.cos(a) * rx * wob * Math.sin(rot) + Math.sin(a) * ry * wob * Math.cos(rot)]);
+        }
+        return pts;
+      };
+      const upper = lobe(640 + side * 290, 220, 300, 150, side * -0.35);
+      const lower = lobe(640 + side * 220, 450, 210, 120, side * 0.4);
+      for (const pts of [lower, upper]) {
+        wash(ctx, pts, '#8a8490', rand, { layers: 5, alpha: 0.55, edge: 0.6, amp: 6 });
+        // scorched edges
+        ctx.save(); tracePolyLocal(ctx, pts); ctx.clip();
+        ctx.strokeStyle = 'rgba(40,30,40,0.55)'; ctx.lineWidth = 26; tracePolyLocal(ctx, pts); ctx.stroke();
+        ctx.restore();
+      }
+      // pale eye-spots, like old moth wings
+      for (const [ex, ey, r] of [[640 + side * 360, 210, 46], [640 + side * 230, 460, 30]]) {
+        ctx.fillStyle = 'rgba(220,214,224,0.6)'; ctx.beginPath(); ctx.arc(ex, ey, r, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(70,60,80,0.7)'; ctx.beginPath(); ctx.arc(ex, ey, r * 0.45, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.strokeStyle = rgba('#3a3440', 0.45); ctx.lineWidth = 2;
+      for (let k = 0; k < 7; k++) { ctx.beginPath(); ctx.moveTo(640 + side * 40, 340); ctx.quadraticCurveTo(640 + side * (180 + k * 50), 300 - k * 30, 640 + side * (260 + k * 50), 120 + k * 40); ctx.stroke(); }
+    }
+    glow(ctx, 640, 380, 60, '#ffb060', 0.7);
+    granulate(ctx, 0, 0, W, H, '#c0b8c8', rand, 0.004, 0.25);
+  },
   'woods-end'(scene, ctx, rand) {
     layer(scene, ctx, 'sky-woods');
     layer(scene, ctx, 'far-woods');
@@ -276,6 +402,8 @@ export function shotTexture(scene, name) {
   ensureBackground(scene, 'village');
   ensureBackground(scene, 'woods');
   ensureBackground(scene, 'caves');
+  ensureBackground(scene, 'cliffs');
+  ensureBackground(scene, 'storm');
   const c = canvas(W, H), ctx = c.getContext('2d');
   const rand = rng(name.length * 41);
   SHOTS[name](scene, ctx, rand);
@@ -291,13 +419,14 @@ export function portraitTexture(scene, who) {
   const S = 128, c = canvas(S, S), ctx = c.getContext('2d');
   ctx.save();
   ctx.beginPath(); ctx.arc(S / 2, S / 2, S / 2 - 3, 0, Math.PI * 2); ctx.clip();
-  const bg = { nell: '#e8d8b0', wick: '#cfe0d8', grandpa: '#ead8c0', pip: '#3a2a48', mossback: '#c8dcb0', thornwolf: '#3a2a3a', haru: '#d8e4c8' }[who] || '#ddd';
+  const bg = { wren: '#f0d8c0', nell: '#e8d8b0', wick: '#cfe0d8', grandpa: '#ead8c0', pip: '#3a2a48', mossback: '#c8dcb0', thornwolf: '#3a2a3a', haru: '#d8e4c8' }[who] || '#ddd';
   ctx.fillStyle = bg; ctx.fillRect(0, 0, S, S);
   if (who === 'wick') drawWick(ctx, 44, 290, 2.5, {});
   if (who === 'grandpa') drawGrandpa(ctx, 54, 300, 2.4, {});
   if (who === 'pip') drawPip(ctx, 64, 72, 2.6, {});
   if (who === 'thornwolf') drawThornwolf(ctx, -50, 168, 0.95, { eyes: 'angry', brambles: 1 });
   if (who === 'haru') drawThornwolf(ctx, -50, 168, 0.95, { eyes: 'calm', brambles: 0 });
+  if (who === 'wren') drawWren(ctx, 64, 165, 1.3, {});
   if (who === 'nell') drawNell(ctx, 52, 236, 1.55, {});
   if (who === 'mossback') drawMossback(ctx, -230, 140, 1.2, { eyeOpen: 1 });
   ctx.restore();

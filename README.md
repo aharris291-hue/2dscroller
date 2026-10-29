@@ -6,7 +6,7 @@ and Pip, the last ember of the Great Hearth.
 All art, music and sound are made by code inside this project, so there are no
 image or audio files to license.
 
-## What's playable now (v0.4 prototype)
+## What's playable now (v0.5 prototype)
 
 - Opening cutscene, then the **Prologue: Hearthside at Dusk**
 - The "Pip" cutscene, then **Chapter 1: Whispering Woods** (3 levels)
@@ -15,6 +15,9 @@ image or audio files to license.
 - **Chapter 2: Glimmer Caves** (4 levels): dark mines lit only by lanterns and crystals,
   mine lifts, a runaway mine cart ride, flooded galleries crossed with the **Ember Dash**,
   and a rising-flood finale where Nell smashes boulders when you light crystal switches
+- **Chapter 3: Dusk Cliffs** (4 levels): crumbling ledges, gloom bats, the **Feather Glide**
+  from Wren the post owl, rising wind updrafts, flying kites, and a stormy finale climb
+  through lightning
 - Mossback cutscene and the **Pip's Glow** ability, which reveals hidden spirit paths
 - Embers, Memory Petals (story fragments), lantern checkpoints with Grandpa's notes,
   Gloomlings to free, mushroom springs, thorns
@@ -27,6 +30,7 @@ image or audio files to license.
 | --- | --- | --- |
 | Move | Arrow keys or A / D | Left stick or D-pad |
 | Jump (hold for higher) | Space, Z, W or Up | A |
+| Glide (after Chapter 3-2) | Hold jump while falling | Hold A |
 | Glow (after Chapter 1-2) | X or C | Y |
 | Ember Dash (after Chapter 2-2) | Shift or V | X or RB |
 | Close a note or petal card | Enter, Down or S | B |

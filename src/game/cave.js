@@ -62,7 +62,7 @@ export class CaveSystems {
     const rows = this.L.grid.length;
     for (const e of this.ents('mover')) {
       const x = e.x * TILE, y = (rows - 1 - e.y) * TILE;
-      const lift = this.s.add.tileSprite(x, y, e.w * TILE, 22, 'lift').setOrigin(0).setDepth(13);
+      const lift = this.s.add.tileSprite(x, y, e.w * TILE, e.skin === 'kite' ? 26 : 22, e.skin || 'lift').setOrigin(0).setDepth(13);
       this.s.physics.add.existing(lift);
       const b = lift.body;
       b.setAllowGravity(false).setImmovable(true);

@@ -376,6 +376,144 @@ const DEFS = [
       L.exit(8, 57);
     },
   },
+  {
+    id: '3-1', chapter: 3, name: 'Windless Steps', theme: 'cliffs', hush: 0.35, music: 'cliffs',
+    width: 180, height: 20, dash: true, intro: 'C6b',
+    build(L) {
+      L.ground(0, 14, 4); L.start(3, 4);
+      L.deco('flags', 1, 4, { w: 8 }); L.deco('birds', 8, 4);
+      L.embers(5, 5, 4);
+      L.sign(11, 4, 'Crumbling ledges fall away soon after you land. Keep moving!');
+      L.crumble(16, 4, 2); L.embers(16, 6, 2);
+      L.ground(21, 10, 4);
+      L.lantern(23, 4, 1); L.bat(26, 7, 2);
+      L.ground(31, 4, 6); L.ground(35, 4, 8);
+      L.deco('birds', 32, 6, { n: 2 });
+      L.crumble(41, 8, 2); L.crumble(45, 7, 1);
+      L.bat(43, 11, 3); L.petal(42, 11, '3-1a');
+      L.ground(48, 12, 6);
+      L.lantern(50, 6, 4); L.hopper(55, 6);
+      L.embers(61, 9, 4);
+      L.ground(66, 14, 6);
+      L.deco('birds', 68, 6); L.deco('flags', 70, 6, { w: 8 });
+      L.bat(71, 9, 2); L.gloom(75, 6);
+      L.crumble(81, 5, 2); L.crumble(85, 4, 2); L.crumble(89, 3, 2); L.crumble(93, 4, 2);
+      L.embers(81, 7, 2); L.embers(85, 6, 2); L.embers(89, 5, 2); L.embers(93, 6, 2);
+      L.bat(87, 8, 3); L.petal(91, 7, '3-1b');
+      L.ground(97, 15, 4);
+      L.lantern(99, 4, 6);
+      L.gloom(104, 4); L.bat(108, 8, 2);
+      L.spring(111, 4); L.plat(112, 11, 4);
+      L.ground(117, 8, 12); L.embers(117, 13, 4); L.petal(121, 14, '3-1c');
+      L.deco('birds', 119, 12, { n: 4 });
+      L.ground(125, 10, 4);
+      L.crumble(136, 5, 2); L.embers(136, 7, 2);
+      L.ground(140, 40, 4);
+      L.bat(132, 7, 3); L.gloom(145, 4); L.hopper(150, 4); L.bat(155, 7, 2);
+      L.deco('birds', 160, 4); L.deco('flags', 162, 4, { w: 8 });
+      L.exit(174, 4);
+    },
+  },
+  {
+    id: '3-2', chapter: 3, name: 'The Sky Post Office', theme: 'cliffs', hush: 0.3, music: 'cliffs',
+    width: 150, height: 26, dash: true, glideFrom: 52,
+    build(L) {
+      L.ground(0, 20, 4); L.start(3, 4);
+      L.deco('birds', 8, 4); L.embers(6, 5, 4);
+      L.bat(14, 7, 2);
+      L.plat(20, 6, 3); L.plat(25, 9, 3); L.plat(30, 12, 3);
+      L.embers(20, 7, 3); L.embers(25, 10, 3); L.embers(30, 13, 3);
+      L.ground(34, 30, 15);
+      L.deco('postoffice', 47, 15, { h: 300 });
+      L.lantern(36, 15, 7); L.bat(41, 18, 3);
+      L.deco('birds', 44, 15, { n: 4 });
+      L.trigger(52, 'C7');
+      L.sign(57, 15, 'Hold jump while falling to glide. Glide into rising wind to soar!');
+      L.embers(64, 15, 3); L.embers(68, 13, 3); L.embers(72, 11, 3);
+      L.updraft(68, 4, 3, 14); L.petal(69, 19, '3-2a');
+      L.ground(76, 8, 10);
+      L.lantern(78, 10, 4); L.gloom(81, 10);
+      L.crumble(88, 9, 2); L.crumble(94, 8, 2);
+      L.bat(91, 13, 3); L.petal(97, 12, '3-2b');
+      L.ground(100, 10, 8); L.gloom(105, 8);
+      L.plat(108, 10, 2); L.ground(110, 4, 12);
+      L.embers(114, 12, 3); L.embers(118, 9, 3);
+      L.updraft(118, 4, 3, 10); L.petal(119, 16, '3-2c');
+      L.ground(124, 26, 4);
+      L.deco('flags', 130, 4, { w: 8 }); L.hopper(134, 4);
+      L.exit(144, 4);
+    },
+  },
+  {
+    id: '3-3', chapter: 3, name: 'Kite Fields', theme: 'cliffs', hush: 0.25, music: 'cliffs',
+    width: 190, height: 22, dash: true, glide: true, outro: 'C7b',
+    build(L) {
+      L.ground(0, 12, 4); L.start(3, 4);
+      L.deco('kitepole', 6, 4);
+      L.sign(9, 4, 'Glide into the rising wind to soar. Flying kites make good stepping stones!');
+      L.updraft(13, 4, 2, 8); L.embers(13, 7, 1, 0, 2);
+      L.plat(16, 12, 4); L.embers(16, 13, 4);
+      L.kite(22, 10, 3, 6, 0, 70);
+      L.kite(34, 12, 3, 0, 3, 50);
+      L.plat(40, 16, 3); L.bat(44, 18, 3);
+      L.embers(23, 12, 3); L.embers(34, 17, 3);
+      L.ground(50, 10, 4);
+      L.lantern(52, 4, 3); L.gloom(56, 4); L.hopper(58, 4);
+      L.updraft(61, 4, 2, 12);
+      L.kite(64, 15, 3, 5, 0, 80); L.petal(66, 19, '3-3a');
+      L.kite(75, 13, 3, 0, 4, 60);
+      L.plat(80, 18, 3); L.embers(80, 19, 3);
+      L.ground(84, 8, 8);
+      L.lantern(86, 8, 5); L.bat(90, 11, 2);
+      L.ground(92, 40, 4);
+      L.deco('kitepole', 94, 4);
+      L.gloom(96, 4); L.hopper(102, 4);
+      L.updraft(106, 4, 2, 14);
+      L.kite(110, 17, 3, 6, 0, 90); L.embers(111, 19, 3);
+      L.updraft(120, 4, 2, 13); L.petal(122, 19, '3-3b');
+      L.kite(124, 16, 3, 0, 3, 60);
+      L.ground(132, 6, 10);
+      L.lantern(134, 10, 6);
+      L.crumble(140, 9, 2); L.crumble(145, 10, 2); L.crumble(150, 9, 2);
+      L.embers(140, 11, 2); L.embers(145, 12, 2); L.embers(150, 11, 2);
+      L.bat(146, 13, 3);
+      L.ground(155, 35, 4);
+      L.updraft(159, 4, 2, 6); L.petal(160, 9, '3-3c');
+      L.gloom(165, 4); L.hopper(172, 4); L.deco('kitepole', 178, 4);
+      L.exit(184, 4);
+    },
+  },
+  {
+    id: '3-F', chapter: 3, name: 'The Storm Stair', theme: 'storm', hush: 0.4, music: 'storm',
+    width: 26, height: 70, dash: true, glide: true, outro: 'C8',
+    build(L) {
+      L.fill(0, 0, 1, 70); L.fill(25, 0, 1, 70); L.ceil(0, 26, 2);
+      L.ground(0, 26, 3); L.start(4, 3);
+      L.lantern(6, 3, 6);
+      L.sign(9, 3, 'Ride the storm winds upward. Watch for the warning flicker before lightning strikes!');
+      L.updraft(12, 3, 3, 12); L.embers(13, 6, 1, 0, 3);
+      L.plat(16, 15, 4); L.embers(16, 16, 4);
+      L.bolt(20, 16, 30, 3.2);
+      L.plat(9, 18, 4); L.petal(20, 18, '3-Fa');
+      L.crumble(3, 21, 3);
+      L.updraft(5, 22, 2, 14); L.embers(5, 26, 1, 0, 3);
+      L.bat(12, 30, 3);
+      L.plat(9, 36, 4);
+      L.lantern(10, 37, 3);
+      L.bolt(13, 37, 52, 3);
+      L.plat(15, 39, 4); L.embers(15, 40, 4);
+      L.bat(18, 45, 3);
+      L.crumble(20, 42, 3);
+      L.updraft(22, 43, 2, 12); L.petal(23, 57, '3-Fb');
+      L.plat(15, 55, 4);
+      L.bolt(14, 56, 66, 3.4);
+      L.crumble(9, 57, 3); L.embers(9, 59, 3);
+      L.plat(3, 60, 4);
+      L.lantern(4, 61, 5); L.petal(2, 64, '3-Fc');
+      L.plat(9, 63, 4);
+      L.exit(11, 64);
+    },
+  },
 ];
 
 export const LEVELS = DEFS.map(buildLevel);

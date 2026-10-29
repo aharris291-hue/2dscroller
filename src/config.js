@@ -22,6 +22,8 @@ export const PHYS = {
   stompBounce: 700,
   dashSpeed: 900,
   dashTime: 0.19, // about 3.5 tiles
+  glideFall: 110, // fall speed while gliding with Wren's feather
+  windLift: 340, // how fast an updraft carries a glider upward
 };
 
 export const FONT_TITLE = '"Patrick Hand", "Comic Sans MS", cursive';

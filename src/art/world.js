@@ -7,6 +7,7 @@ import {
 } from './paint.js';
 import { INK, drawMossback } from './characters.js';
 import { paintRail, drawNell } from './caves.js';
+import { paintCliffDeco } from './cliffs.js';
 
 export const THEMES = {
   village: {
@@ -35,6 +36,12 @@ export const THEMES = {
     clouds: '#ffb48a', far: '#a06070', mid: '#6a3a50', near: '#2e1a28',
     soil: '#7a4a48', grass: ['#f0c070', '#c98a48', '#94603a'], rock: '#a08088', wood: '#a8743f',
     midKind: 'cliffs', hearth: true, fog: '#d0a8a8', light: '#ffd8a0', particle: 0xffc070,
+  },
+  storm: {
+    sky: [[0, '#1e1a30'], [0.5, '#3e3454'], [1, '#7a5a6a']],
+    sun: null, clouds: '#5a4e6e', far: '#4a3a58', mid: '#2e2440', near: '#141018',
+    soil: '#6a4448', grass: ['#c8a070', '#9a7048', '#6a4a30'], rock: '#8a7a88', wood: '#8a5a3a',
+    midKind: 'cliffs', hearth: true, fog: '#8a80a0', light: '#ffd8a0', particle: 0xd0d8ff,
   },
   heart: {
     sky: [[0, '#1a0a10'], [1, '#4a1424']],
@@ -641,6 +648,7 @@ function paintDeco(ctx, d, th, rows) {
       break;
     }
     default:
+      paintCliffDeco(ctx, d, x, y, rand);
   }
 }
 

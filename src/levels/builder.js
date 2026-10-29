@@ -6,6 +6,7 @@
 //   #  soil      B  stone block      =  wooden plank (jump up through it)
 //   ~  spirit platform (only solid while Pip's Glow is shining)
 //   ^  thorns (hurt)     w  water (hurt; Pip hates it)     r  mine-cart rail
+//   c  crumbling ledge (falls away a moment after Wick lands on it)
 //   .  empty air
 
 export function buildLevel(def) {
@@ -37,6 +38,14 @@ export function buildLevel(def) {
     /** A stalactite hanging just under the ceiling tile above (x, y). */
     drip(x, y) { ent('drip', x, y); },
     nell(x, y, lines = []) { ent('nell', x, y, { lines }); },
+    crumble(x, y, w) { for (let i = 0; i < w; i++) set('c', x + i, y); },
+    /** A column of rising wind, w wide and h tall, starting at row y. Gliding inside it lifts Wick. */
+    updraft(x, y, w, h) { ent('updraft', x, y, { w, h }); },
+    /** A lightning strike that hits column x, from cloud row `top` down to ground row y. */
+    bolt(x, y, top, period = 3) { ent('bolt', x, y, { top, period }); },
+    /** A gloom bat that swoops `range` tiles either side of (x, y). */
+    bat(x, y, range = 3, vrange = 0.6) { ent('bat', x, y, { range, vrange }); },
+    kite(x, y, w, dx, dy, speed = 70) { ent('mover', x, y, { w, dx, dy, speed, skin: 'kite' }); },
     embers(x, y, n = 1, dx = 1, dy = 0) { for (let i = 0; i < n; i++) ent('ember', x + i * dx, y + i * dy); },
     petal(x, y, id) { ent('petal', x, y, { id }); },
     start(x, y) { ent('start', x, y); },
