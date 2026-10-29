@@ -23,6 +23,7 @@ image or audio files to license.
 | Move | Arrow keys or A / D | Left stick or D-pad |
 | Jump (hold for higher) | Space, Z, W or Up | A |
 | Glow (after Chapter 1-2) | X, C or Shift | X or Y |
+| Close a note or petal card | Enter, Down or S | B |
 | Pause | Esc or P | Start |
 | Skip a cutscene | Hold Esc | Hold B |
 | Fullscreen (desktop app) | F11 or Alt+Enter | |

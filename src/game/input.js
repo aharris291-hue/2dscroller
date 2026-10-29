@@ -12,11 +12,12 @@ const KEYS = {
   confirm: ['ENTER', 'SPACE', 'Z'],
   back: ['ESC', 'BACKSPACE'],
   pause: ['ESC', 'P'],
+  dismiss: ['ENTER', 'DOWN', 'S'],
 };
 
 // Standard gamepad layout (Xbox naming): 0 A, 1 B, 2 X, 3 Y, 9 Start, 12-15 d-pad.
 const PAD = {
-  jump: [0], confirm: [0], back: [1], glow: [2, 3], pause: [9], up: [12], down: [13], left: [14], right: [15],
+  jump: [0], confirm: [0], back: [1], dismiss: [1], glow: [2, 3], pause: [9], up: [12], down: [13], left: [14], right: [15],
 };
 
 export class Controls {

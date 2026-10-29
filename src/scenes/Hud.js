@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { VIEW_W as W, VIEW_H as H, FONT_BODY } from '../config.js';
 import { NOTES, PETALS, CHAPTER_NAMES } from '../story/script.js';
 import { save } from '../game/save.js';
+import { Controls } from '../game/input.js';
 import { title, body, panel } from '../ui/ui.js';
 
 export class HudScene extends Phaser.Scene {
@@ -36,7 +37,10 @@ export class HudScene extends Phaser.Scene {
     this.cardText = this.add.text(W / 2, H - 112, '', {
       fontFamily: FONT_BODY, fontSize: '22px', color: '#3a2630', align: 'center', wordWrap: { width: 760 }, fontStyle: 'italic',
     }).setOrigin(0.5);
-    this.card.add([this.cardBg, this.cardTitle, this.cardText]);
+    this.cardHint = body(this, W / 2 + 410, H - 60, 'Enter / Down / B to close', 15, '#8a7a80').setOrigin(1, 1);
+    this.card.add([this.cardBg, this.cardTitle, this.cardText, this.cardHint]);
+    this.cardOpen = false;
+    this.controls = new Controls(this);
 
     const game = this.scene.get('Game');
     game.events.on('note', this.onNote, this);
@@ -59,8 +63,21 @@ export class HudScene extends Phaser.Scene {
     this.cardTitle.setText(heading).setStroke(color, 8);
     this.cardText.setText(text);
     this.tweens.killTweensOf(this.card);
+    this.cardTimer?.remove();
     this.card.setAlpha(0).setY(20);
-    this.tweens.add({ targets: this.card, alpha: 1, y: 0, duration: 300, hold: 5200, yoyo: true });
+    this.cardOpen = true;
+    // Long enough to read (about 30 ms per letter), then it fades by itself.
+    const hold = Math.min(4500, 2000 + text.length * 30);
+    this.tweens.add({ targets: this.card, alpha: 1, y: 0, duration: 250 });
+    this.cardTimer = this.time.delayedCall(250 + hold, () => this.hideCard());
+  }
+
+  hideCard() {
+    if (!this.cardOpen) return;
+    this.cardOpen = false;
+    this.cardTimer?.remove();
+    this.tweens.killTweensOf(this.card);
+    this.tweens.add({ targets: this.card, alpha: 0, y: 20, duration: 200 });
   }
 
   onNote(i) {
@@ -69,6 +86,11 @@ export class HudScene extends Phaser.Scene {
 
   onPetal(id) {
     this.showCard('A memory petal', PETALS[id] || '', '#b8607a');
+  }
+
+  update() {
+    this.controls.update();
+    if (this.cardOpen && this.controls.pressed('dismiss')) this.hideCard();
   }
 
   refresh() {
