@@ -57,6 +57,16 @@ You only need to do steps 1 to 3 once.
 
    Then open the link it shows (usually http://localhost:5173).
 
+### If something goes wrong
+
+- **"Electron failed to install correctly"**: the desktop part didn't finish downloading. Type this, wait for it to finish, then run `npm run app` again:
+
+  ```bash
+  node node_modules/electron/install.js
+  ```
+
+- **It still won't start**: you can always play in your browser with `npm run dev` instead.
+
 ## Where things live (for editing)
 
 | What | File |

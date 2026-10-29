@@ -9,11 +9,11 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "app": "npm run build && electron .",
-    "dist": "npm run build && electron-builder",
-    "dist:win": "npm run build && electron-builder --win",
-    "dist:mac": "npm run build && electron-builder --mac",
-    "dist:linux": "npm run build && electron-builder --linux",
+    "app": "npm run build && node tools/ensure-electron.cjs && electron .",
+    "dist": "npm run build && node tools/ensure-electron.cjs && electron-builder",
+    "dist:win": "npm run build && node tools/ensure-electron.cjs && electron-builder --win",
+    "dist:mac": "npm run build && node tools/ensure-electron.cjs && electron-builder --mac",
+    "dist:linux": "npm run build && node tools/ensure-electron.cjs && electron-builder --linux",
     "check": "node tools/check-levels.mjs"
   },
   "build": {
