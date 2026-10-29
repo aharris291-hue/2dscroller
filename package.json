@@ -1,0 +1,49 @@
+{
+  "name": "ember-hollow",
+  "productName": "Ember Hollow",
+  "version": "0.1.0",
+  "description": "A 2D side-scrolling platformer",
+  "main": "electron/main.cjs",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "app": "npm run build && electron .",
+    "dist": "npm run build && electron-builder",
+    "dist:win": "npm run build && electron-builder --win",
+    "dist:mac": "npm run build && electron-builder --mac",
+    "dist:linux": "npm run build && electron-builder --linux",
+    "check": "node tools/check-levels.mjs"
+  },
+  "build": {
+    "appId": "com.emberhollow.game",
+    "productName": "Ember Hollow",
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": "dir"
+    },
+    "mac": {
+      "target": "dir"
+    },
+    "linux": {
+      "target": "dir"
+    }
+  },
+  "dependencies": {
+    "@fontsource/nunito": "^5.3.0",
+    "@fontsource/patrick-hand": "^5.3.0",
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "electron": "^38.8.6",
+    "electron-builder": "^26.0.12",
+    "vite": "^6.4.5"
+  }
+}
