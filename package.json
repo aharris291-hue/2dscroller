@@ -1,7 +1,7 @@
 {
   "name": "ember-hollow",
   "productName": "Ember Hollow",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Ember Hollow: a hand-painted watercolor platformer",
   "main": "electron/main.cjs",
   "type": "module",
