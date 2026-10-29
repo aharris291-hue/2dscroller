@@ -42,7 +42,22 @@ image or audio files to license.
 | Skip a cutscene | Hold Esc | Hold B |
 | Fullscreen (desktop app) | F11 or Alt+Enter | |
 
-## How to run it on your computer
+## Install it on a Windows PC (the easy way)
+
+No setup needed. This is like installing any other game.
+
+1. Go to **https://github.com/aharris291-hue/2dscroller/releases**.
+2. Under the newest version, click **Ember-Hollow-Setup-1.0.0.exe**. It downloads.
+3. Open the file you just downloaded (it is in your **Downloads** folder).
+4. Windows may show a blue box that says **"Windows protected your PC"**. That happens to
+   new games that aren't "signed" yet. Click **More info**, then **Run anyway**.
+5. Wait a few seconds. The game installs itself, puts an **Ember Hollow** icon on your
+   desktop, and starts. Next time, just double-click that icon.
+
+To remove it: **Start → Settings → Apps**, find **Ember Hollow**, click **Uninstall**.
+Your save is kept, in case you install it again.
+
+## How to run it from the code (for making changes)
 
 You only need to do steps 1 to 3 once.
 
@@ -102,8 +117,31 @@ between the quote marks.
 After changing a level, run `npm run check`. It proves every level can still be
 finished and every ember can still be reached.
 
-## Building for Steam (later)
+## Making a new installer
 
-`npm run dist:win`, `npm run dist:mac` and `npm run dist:linux` build the desktop
-game into the `release/` folder. Steam setup (the $100 Steam Direct fee, store page,
-Steamworks upload) comes once the game is further along.
+You don't need your own PC for this. GitHub builds it on a Windows computer for you:
+
+1. Change the `version` in `package.json` (for example `1.0.1`).
+2. Make a tag with the same number and push it:
+
+   ```bash
+   git tag v1.0.1
+   ```
+
+   ```bash
+   git push origin v1.0.1
+   ```
+
+3. Watch the **Actions** tab on GitHub. After about 10 minutes, a new release appears on the
+   **Releases** page with two files:
+   - `Ember-Hollow-Setup-1.0.1.exe`: the installer for players.
+   - `Ember-Hollow-Windows-for-Steam.zip`: the game folder you upload to Steam.
+
+You can also start a build by hand: **Actions → Build Windows installer → Run workflow**.
+The files then appear at the bottom of that run's page under **Artifacts**.
+
+## Steam store images
+
+`steam-assets/` holds the store and library images and screenshots, all painted from the
+game's own art. To make them again, run `npm run dev`, then in a second terminal
+`node tools/steam-art.cjs`.
