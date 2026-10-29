@@ -9,6 +9,7 @@ export const SPEAKERS = {
   narrator: { name: '', color: '#6a5a70' },
   thornwolf: { name: 'The Thornwolf', color: '#5a3a5a' },
   haru: { name: 'Haru', color: '#8a8070' },
+  nell: { name: 'Nell', color: '#c9a030' },
 };
 
 // Cutscenes are lists of steps. `shot` changes the painted panel, `say` shows a
@@ -81,9 +82,58 @@ export const CUTSCENES = {
     { wait: 1200 },
     { say: 'pip', text: 'Wick. Wick... good.' },
     { say: 'mossback', text: 'The roots... run under the mountains. Go through... the caves.' },
-    { title: 'End of Chapter 1', sub: 'Thank you for playing! Chapter 2: Glimmer Caves is on its way.' },
+    { title: 'End of Chapter 1', sub: 'Next: Chapter 2, Glimmer Caves' },
   ],
 };
+
+Object.assign(CUTSCENES, {
+  C5: [
+    { shot: 'mine-office' },
+    { say: 'nell', text: 'WHO GOES THERE. State your business and your shoe size.' },
+    { say: 'wick', text: "...Wick. Lantern-keeper. I'm going to the Hearth. Size three?" },
+    { say: 'nell', text: "A lantern-keeper. You're like nine." },
+    { say: 'wick', text: 'Eleven.' },
+    { say: 'nell', text: "Well, I'm Nell, I'm TWELVE, and this is my mine. I don't need a kid with a candle getting lost in it." },
+    { say: 'wick', text: "I wasn't offering." },
+    { say: 'nell', text: 'Good!' },
+    { say: 'wick', text: 'Good!' },
+    { shot: 'mine-office-empty' },
+    { say: 'pip', text: '...Same.' },
+    { say: 'wick', text: 'We are NOT the same.' },
+  ],
+  C5b: [
+    { shot: 'nell-saved' },
+    { say: 'nell', text: '...Ow.' },
+    { say: 'wick', text: 'Are you okay? Your cart jumped right off the rails.' },
+    { say: 'nell', text: 'I MEANT to do that. It was a... shortcut.' },
+    { say: 'pip', text: 'Crash.' },
+    { say: 'nell', text: '...Fine. You saved me. Thanks, candle-kid.' },
+    { say: 'nell', text: 'Here. My mum built this bellows. Stick it on your lantern and you\'ll go WHOOSH.' },
+    { unlock: 'dash' },
+    { title: 'Ember Dash', sub: 'Press Shift, V or the gamepad X button to dash through the air. Once per jump!' },
+  ],
+  C5c: [
+    { shot: 'drowned-talk' },
+    { say: 'nell', text: "The water's from the lower mine. That's where my crew was working when the Hush came." },
+    { say: 'wick', text: 'Your crew?' },
+    { say: 'nell', text: "My mum's the foreman. She's down there. Asleep. They all are." },
+    { say: 'nell', text: 'I keep thinking if I just dig fast enough, by myself, I can fix it.' },
+    { say: 'wick', text: '...Yeah. I know that one.' },
+    { say: 'pip', text: 'Same.' },
+    { say: 'wick', text: "Okay. Maybe we ARE the same. So let's go down there together." },
+    { say: 'nell', text: "Together. Fine. But I'm in front." },
+  ],
+  C6: [
+    { shot: 'sleepers-mine' },
+    { say: 'nell', text: "Hi, Mum. Told you I'd find you. I just... thought I'd be able to wake you up." },
+    { say: 'wick', text: "It won't wake them. But it'll keep them safe until I get to the Hearth." },
+    { say: 'nell', text: "You'd... do that? Leave one of your lights here?" },
+    { say: 'wick', text: "My grandpa says a lantern isn't for seeing. It's so others can see YOU. So she knows you're here." },
+    { say: 'nell', text: "That's very sappy." },
+    { say: 'nell', text: 'Come back, okay? Wake everyone up and then come back.' },
+    { title: 'End of Chapter 2', sub: 'Thank you for playing! Chapter 3: Dusk Cliffs is on its way.' },
+  ],
+});
 
 // One note is tied to each lantern post (checkpoint).
 export const NOTES = [
@@ -111,12 +161,25 @@ export const PETALS = {
   '1-3a': 'One winter, Morrow watched the candles in the village go out, one by one.',
   '1-3b': '"Will you go out too?" he asked. "Someday," said Ash. "Everything that burns does."',
   '1-3c': 'Morrow did not sleep that night, or the next.',
+  '2-1a': 'The first lantern-keeper was a mole. Nobody remembers this except the moles.',
+  '2-1b': 'Moles carried Ash\'s warmth through the roots, so the valley would never be cold underground.',
+  '2-1c': 'The crystals grew where her sparks fell. That is why they glow.',
+  '2-2a': 'Morrow visited the mines once. He did not like the dark, but he liked the crystals, because they kept their light.',
+  '2-2b': '"A light you can keep," Morrow said, holding a crystal. "Now THAT is a good idea."',
+  '2-2c': '"A kept light is a cold one, my friend," said Ash. Morrow did not listen.',
+  '2-3a': 'The moles sang work songs to the crystals, and the crystals hummed back.',
+  '2-3b': 'When the Hush came, the singing stopped first.',
+  '2-3c': 'Water fills any space that warmth leaves behind.',
+  '2-Fa': 'The foreman wrote in her logbook every night: "All safe. All warm."',
+  '2-Fb': 'The last entry reads: "Something grey in the tunnels. Will check in the morning."',
+  '2-Fc': 'In the margin, a small lantern is drawn in a child\'s hand. Under it: "For Mum."',
 };
 
 // Pip learns to talk as the story goes on. Lines are picked by chapter.
 export const PIP_BARKS = {
   0: { ember: ['Fwip!', 'Fwip fwip!'], fall: ['Fweee--'], free: ['(happy spin)'], idle: ['(yawns a little spark)'], glow: ['Fwip!'] },
-  1: { ember: ['Warm!', 'Warm!', 'More!'], fall: ['Wick?!'], free: ['Go home!', 'Warm now!'], idle: ['Sleepy...?'], glow: ['Look!', 'See?'] },
+  1: { ember: ['Warm!', 'Warm!', 'More!'], fall: ['Wick?!'], free: ['Go home!', 'Warm now!'], idle: ['Sleepy...?'], glow: ['Look!', 'See?'], water: ['Nope.'] },
+  2: { ember: ['More! More!', 'Shiny!', 'More!'], fall: ["We don't do holes."], free: ['Bye, friend!', 'Go home!'], idle: ["Are we lost? We're lost."], glow: ['Bright!', 'Look!'], water: ['NOPE.', 'No water. No.', 'NOPE. Nope nope.'] },
 };
 
 // Wick's one-time reactions.
@@ -128,4 +191,5 @@ export const WICK_BARKS = {
 export const CHAPTER_NAMES = {
   0: 'Prologue: The Last Lantern',
   1: 'Chapter 1: Whispering Woods',
+  2: 'Chapter 2: Glimmer Caves',
 };

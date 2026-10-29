@@ -13,7 +13,7 @@ const fs = require('fs');
   await page.goto(url);
   for (const s of steps) {
     if (s.wait) await page.waitForTimeout(s.wait);
-    if (s.until) await page.waitForFunction(s.until, null, { timeout: 60000, polling: 200 });
+    if (s.until) await page.waitForFunction(s.until, null, { timeout: 240000, polling: 200 });
     if (s.down) await page.keyboard.down(s.down);
     if (s.up) await page.keyboard.up(s.up);
     if (s.press) await page.keyboard.press(s.press, { delay: 80 });

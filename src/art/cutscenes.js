@@ -6,6 +6,7 @@ import { canvas, rng, wash, blobPoints, glow, rgba, granulate, addTexture } from
 import { drawWick, drawPip, drawGrandpa, drawMossback, INK } from './characters.js';
 import { ensureBackground } from './world.js';
 import { drawThornwolf, drawHaruSleeping } from './thornwolf.js';
+import { drawNell } from './caves.js';
 
 function layer(scene, ctx, key, dx = 0, dy = 0, alpha = 1) {
   ctx.save();
@@ -51,6 +52,24 @@ function hush(ctx, rand, amount) {
 function tint(ctx, color, alpha) {
   ctx.fillStyle = rgba(color, alpha);
   ctx.fillRect(0, 0, W, H);
+}
+
+function caveRoom(scene, ctx, rand, office = true) {
+  layer(scene, ctx, 'sky-caves');
+  layer(scene, ctx, 'far-caves');
+  layer(scene, ctx, 'mid-caves', 0, 40);
+  ground(ctx, 500, '#3c3352', rand);
+  if (office) {
+    wash(ctx, [[60, 500], [60, 250], [360, 250], [360, 500]], '#7a5a40', rand, { layers: 3, alpha: 0.85, edge: 0.6 });
+    wash(ctx, [[30, 256], [210, 170], [390, 256]], '#5a4038', rand, { layers: 3, alpha: 0.9, edge: 0.6 });
+    glow(ctx, 280, 340, 70, '#ffcf7a', 0.6);
+  }
+  for (let i = 0; i < 5; i++) glow(ctx, 100 + rand() * 1080, 120 + rand() * 300, 30 + rand() * 30, '#7ad8f0', 0.35);
+}
+
+function paint2(ctx, color) {
+  ctx.fillStyle = color; ctx.fill();
+  ctx.strokeStyle = INK; ctx.lineWidth = 4; ctx.stroke();
 }
 
 const SHOTS = {
@@ -189,6 +208,48 @@ const SHOTS = {
     drawWick(ctx, 1080, 520, 1.9, { eyes: 'closed' }, true);
     drawPip(ctx, 1010, 330, 1.6, {});
   },
+  'mine-office'(scene, ctx, rand) { caveRoom(scene, ctx, rand); drawNell(ctx, 840, 520, 2.6, { swing: 0.6 }, true); drawWick(ctx, 380, 520, 2.4, { eyes: 'worried' }); drawPip(ctx, 450, 300, 1.8, { mood: 'worried' }); },
+  'mine-office-empty'(scene, ctx, rand) { caveRoom(scene, ctx, rand); drawWick(ctx, 380, 520, 2.4, { eyes: 'open' }); drawPip(ctx, 450, 300, 1.8, {}); },
+  'nell-saved'(scene, ctx, rand) {
+    caveRoom(scene, ctx, rand, false);
+    // the overturned cart, wheels in the air
+    ctx.save(); ctx.translate(900, 470); ctx.rotate(Math.PI * 0.85);
+    ctx.beginPath(); ctx.moveTo(-90, -40); ctx.lineTo(90, -40); ctx.lineTo(74, 40); ctx.lineTo(-74, 40); ctx.closePath();
+    paint2(ctx, '#6a5a5a');
+    for (const wx of [-50, 50]) { ctx.beginPath(); ctx.arc(wx, 50, 18, 0, Math.PI * 2); paint2(ctx, '#4a4048'); }
+    ctx.restore();
+    for (let i = 0; i < 8; i++) glow(ctx, 760 + rand() * 260, 380 + rand() * 120, 6, '#9fe0ff', 0.8);
+    drawNell(ctx, 680, 520, 2.4, { eyes: 'cross', pick: false });
+    drawWick(ctx, 360, 520, 2.4, { eyes: 'worried', arm: 0.6 });
+    drawPip(ctx, 430, 300, 1.8, {});
+  },
+  'drowned-talk'(scene, ctx, rand) {
+    caveRoom(scene, ctx, rand, false);
+    tint(ctx, '#101a30', 0.35);
+    // still black water with lantern reflections
+    ctx.fillStyle = 'rgba(30,50,90,0.9)'; ctx.fillRect(0, 500, W, H - 500);
+    for (let i = 0; i < 30; i++) { ctx.fillStyle = rgba('#ffd27a', 0.4 * rand()); ctx.fillRect(560 + rand() * 160, 510 + rand() * 120, 30 + rand() * 40, 2); }
+    glow(ctx, 640, 420, 220, '#ffcf7a', 0.35);
+    wash(ctx, [[-20, 520], [-20, 470], [W + 20, 480], [W + 20, 520]], '#3a3352', rand, { layers: 3, alpha: 0.9 });
+    drawWick(ctx, 520, 490, 2.2, { eyes: 'open' });
+    drawNell(ctx, 790, 490, 2.2, { pick: false, eyes: 'closed' }, true);
+    drawPip(ctx, 640, 290, 1.6, {});
+  },
+  'sleepers-mine'(scene, ctx, rand) {
+    caveRoom(scene, ctx, rand, false);
+    tint(ctx, '#141024', 0.25);
+    glow(ctx, 640, 420, 360, '#ffcf7a', 0.45);
+    ground(ctx, 500, '#4a5a3a', rand, ['#6a8a4a', '#4a6a3a']);
+    for (const [sx, sy] of [[90, 470], [230, 490], [1180, 480], [560, 492]]) drawNell(ctx, sx, sy, 1.1, { sleep: true });
+    // Nell's mum, the foreman, asleep right beside her daughter
+    drawNell(ctx, 900, 488, 1.5, { sleep: true, foreman: true });
+    // the lantern Wick leaves behind, set in a crystal
+    wash(ctx, [[600, 500], [620, 380], [640, 340], [660, 380], [680, 500]], '#7ad8f0', rand, { layers: 3, alpha: 0.7, edge: 0.6 });
+    glow(ctx, 640, 360, 80, '#ffd27a', 0.9);
+    drawNell(ctx, 1060, 480, 2.0, { pick: false, eyes: 'closed' }, true);
+    drawWick(ctx, 420, 470, 2.0, { eyes: 'open' });
+    drawPip(ctx, 490, 280, 1.5, {});
+  },
   'woods-end'(scene, ctx, rand) {
     layer(scene, ctx, 'sky-woods');
     layer(scene, ctx, 'far-woods');
@@ -214,6 +275,7 @@ export function shotTexture(scene, name) {
   if (scene.textures.exists(key)) return key;
   ensureBackground(scene, 'village');
   ensureBackground(scene, 'woods');
+  ensureBackground(scene, 'caves');
   const c = canvas(W, H), ctx = c.getContext('2d');
   const rand = rng(name.length * 41);
   SHOTS[name](scene, ctx, rand);
@@ -229,13 +291,14 @@ export function portraitTexture(scene, who) {
   const S = 128, c = canvas(S, S), ctx = c.getContext('2d');
   ctx.save();
   ctx.beginPath(); ctx.arc(S / 2, S / 2, S / 2 - 3, 0, Math.PI * 2); ctx.clip();
-  const bg = { wick: '#cfe0d8', grandpa: '#ead8c0', pip: '#3a2a48', mossback: '#c8dcb0', thornwolf: '#3a2a3a', haru: '#d8e4c8' }[who] || '#ddd';
+  const bg = { nell: '#e8d8b0', wick: '#cfe0d8', grandpa: '#ead8c0', pip: '#3a2a48', mossback: '#c8dcb0', thornwolf: '#3a2a3a', haru: '#d8e4c8' }[who] || '#ddd';
   ctx.fillStyle = bg; ctx.fillRect(0, 0, S, S);
   if (who === 'wick') drawWick(ctx, 44, 290, 2.5, {});
   if (who === 'grandpa') drawGrandpa(ctx, 54, 300, 2.4, {});
   if (who === 'pip') drawPip(ctx, 64, 72, 2.6, {});
   if (who === 'thornwolf') drawThornwolf(ctx, -50, 168, 0.95, { eyes: 'angry', brambles: 1 });
   if (who === 'haru') drawThornwolf(ctx, -50, 168, 0.95, { eyes: 'calm', brambles: 0 });
+  if (who === 'nell') drawNell(ctx, 52, 236, 1.55, {});
   if (who === 'mossback') drawMossback(ctx, -230, 140, 1.2, { eyeOpen: 1 });
   ctx.restore();
   ctx.strokeStyle = INK; ctx.lineWidth = 4;

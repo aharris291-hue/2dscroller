@@ -211,6 +211,171 @@ const DEFS = [
       L.embers(6, 4, 2); L.embers(20, 4, 2);
     },
   },
+  {
+    id: '2-1', chapter: 2, name: 'The Crystal Lift', theme: 'caves', hush: 0.35, dark: 0.82, music: 'caves',
+    width: 170, height: 18, intro: 'C5',
+    build(L) {
+      L.ceil(0, 170, 2);
+      L.ground(0, 20, 3); L.start(3, 3);
+      L.deco('shack', 7, 3);
+      L.nell(13, 3, ["Don't follow me. And don't touch my lifts."]);
+      L.crystal(17, 3);
+      L.sign(15, 3, "It's dark down here. Crystals, lanterns and Pip's Glow light the way.");
+      L.embers(5, 4, 3);
+      L.gloom(18, 3);
+      L.mover(21, 3, 3, 4, 0, 70);
+      L.embers(22, 6, 3);
+      L.ground(29, 15, 3);
+      L.crystal(31, 3); L.lantern(33, 3, 1);
+      L.deco('beam', 36, 3, { h: 4 });
+      L.hopper(37, 3);
+      L.petal(39, 6, '2-1a');
+      L.mover(42, 3, 2, 0, 5, 60);
+      L.ground(44, 10, 9);
+      L.embers(44, 10, 4); L.drip(48, 15);
+      L.crystal(50, 9); L.petal(52, 11, '2-1b');
+      L.ground(54, 20, 3);
+      L.gloom(58, 3); L.drip(61, 15); L.drip(64, 15);
+      L.embers(59, 4, 6);
+      L.lantern(66, 3, 2);
+      L.deco('beam', 70, 3, { h: 5 });
+      L.mover(75, 4, 3, 4, 0, 80);
+      L.mover(83, 6, 3, 3, 0, 70);
+      L.embers(76, 7, 3); L.embers(84, 9, 3);
+      L.petal(80, 9, '2-1c');
+      L.ground(90, 20, 3);
+      L.crystal(92, 3);
+      L.hopper(96, 3); L.gloom(102, 3);
+      L.thorns(106, 3, 2); L.embers(106, 6, 2);
+      L.ground(110, 30, 3);
+      L.lantern(115, 3, 3);
+      L.drip(120, 15); L.drip(123, 15); L.drip(126, 15);
+      L.embers(120, 4, 7);
+      L.spring(130, 3); L.plat(131, 10, 4); L.embers(131, 11, 4);
+      L.gloom(136, 3);
+      L.ground(140, 30, 3);
+      L.crystal(150, 3); L.deco('beam', 156, 3, { h: 4 });
+      L.gloom(146, 3); L.hopper(154, 3);
+      L.exit(165, 3);
+    },
+  },
+  {
+    id: '2-2', chapter: 2, name: 'Mine Cart Rush', theme: 'caves', hush: 0.3, dark: 0.55, music: 'cart',
+    width: 262, height: 18, mode: 'cart', cartSpeed: 320, outro: 'C5b',
+    build(L) {
+      L.ceil(0, 262, 2);
+      L.rail(0, 3, 30); L.start(3, 4);
+      L.sign(6, 4, 'The cart rolls by itself. Jump over gaps, thorns and Gloomlings!');
+      L.embers(10, 5, 5); L.embers(20, 6, 3);
+      L.rail(33, 3, 20); L.embers(30, 6, 3);
+      L.gloom(42, 4);
+      L.crystal(46, 4);
+      L.rail(55, 4, 20); L.embers(53, 7, 2);
+      L.lantern(58, 5, 1);
+      L.petal(66, 8, '2-2a');
+      L.rail(78, 3, 25); L.embers(75, 7, 3);
+      L.thorns(88, 4, 2); L.embers(88, 7, 2);
+      L.gloom(97, 4);
+      L.rail(105, 5, 15); L.embers(103, 8, 2);
+      L.lantern(108, 6, 4);
+      L.gloom(115, 6);
+      L.crystal(112, 6);
+      L.rail(123, 3, 30); L.embers(120, 7, 3);
+      L.thorns(133, 4, 2); L.thorns(143, 4, 2);
+      L.embers(133, 7, 2); L.embers(143, 7, 2);
+      L.petal(138, 8, '2-2b');
+      L.rail(156, 4, 12); L.embers(153, 7, 3);
+      L.rail(171, 3, 40); L.embers(168, 7, 3);
+      L.lantern(174, 4, 6);
+      L.thorns(185, 4, 2); L.gloom(195, 4); L.thorns(205, 4, 3);
+      L.embers(185, 7, 2); L.embers(205, 7, 3);
+      L.crystal(190, 4);
+      L.petal(198, 8, '2-2c');
+      L.rail(214, 4, 48); L.embers(211, 7, 3);
+      L.gloom(225, 5); L.thorns(235, 5, 2);
+      L.exit(252, 5);
+    },
+  },
+  {
+    id: '2-3', chapter: 2, name: 'The Drowned Gallery', theme: 'caves', hush: 0.4, dark: 0.72, music: 'caves',
+    width: 180, height: 18, dash: true, outro: 'C5c',
+    build(L) {
+      L.ceil(0, 180, 2);
+      L.ground(0, 16, 3); L.start(3, 3);
+      L.sign(8, 3, 'Water ahead! Jump, then press Shift, V or the gamepad X to Ember Dash across.');
+      L.embers(4, 4, 4);
+      L.ground(16, 6, 1); L.water(16, 1, 6, 2);
+      L.embers(17, 6, 4);
+      L.ground(22, 10, 3);
+      L.crystal(24, 3); L.lantern(26, 3, 4);
+      L.gloom(29, 3);
+      L.ground(32, 10, 1); L.water(32, 1, 10, 2);
+      L.block(36, 3, 2, 1); L.embers(36, 5, 2);
+      L.ground(42, 14, 3);
+      L.drip(46, 15); L.drip(49, 15);
+      L.hopper(52, 3);
+      L.ground(56, 16, 1); L.water(56, 1, 16, 2);
+      L.mover(57, 4, 3, 9, 0, 90);
+      L.embers(58, 7, 3); L.embers(66, 7, 3);
+      L.petal(62, 9, '2-3a');
+      L.ground(72, 14, 3);
+      L.lantern(75, 3, 5);
+      L.gloom(79, 3);
+      L.crystal(83, 3);
+      L.ground(86, 4, 6);
+      L.ground(90, 13, 1); L.water(90, 1, 13, 2);
+      L.plat(96, 5, 3); L.embers(96, 6, 3); L.petal(97, 9, '2-3b');
+      L.ground(103, 15, 3);
+      L.drip(106, 15); L.gloom(108, 3);
+      L.lantern(112, 3, 6);
+      L.ground(118, 24, 1); L.water(118, 1, 24, 2);
+      L.block(121, 3); L.block(127, 4); L.block(133, 3); L.block(138, 4);
+      L.embers(121, 5); L.embers(127, 6); L.embers(133, 5); L.embers(138, 6);
+      L.petal(130, 8, '2-3c');
+      L.crystal(124, 3);
+      L.ground(142, 38, 3);
+      L.hopper(150, 3); L.gloom(156, 3);
+      L.crystal(160, 3); L.deco('beam', 166, 3, { h: 4 });
+      L.exit(172, 3);
+    },
+  },
+  {
+    id: '2-F', chapter: 2, name: 'The Flood', theme: 'caves', hush: 0.45, dark: 0.6, music: 'flood',
+    width: 24, height: 64, dash: true, mode: 'flood', floodSpeed: 30, outro: 'C6',
+    build(L) {
+      // Climb zig-zagging planks before the water catches up. Two boulders block
+      // the way: light the crystal switch with Glow and Nell smashes the boulder.
+      L.fill(0, 0, 1, 64); L.fill(23, 0, 1, 64); L.ceil(0, 24, 3);
+      L.ground(0, 24, 3); L.start(4, 3);
+      L.nell(9, 3, ["The water's coming! Climb, candle-kid! I'll clear the rocks!"]);
+      L.lantern(6, 3, 7);
+      L.plat(8, 5, 4); L.plat(14, 8, 4); L.plat(19, 11, 3);
+      L.plat(13, 13, 4); L.plat(7, 15, 4);
+      L.embers(8, 6, 3); L.embers(14, 9, 3); L.embers(13, 14, 3);
+      L.petal(20, 14, '2-Fa');
+      // shelf A, blocked by boulder a
+      L.plat(1, 18, 15);
+      L.lantern(3, 19, 3);
+      L.switchCrystal(6, 19, 'a'); L.boulder(10, 19, 'a'); L.fill(8, 21, 6, 1);
+      L.plat(18, 21, 3); L.crystal(19, 22);
+      L.plat(14, 24, 4); L.plat(8, 27, 4); L.plat(2, 30, 4);
+      L.embers(14, 25, 3); L.embers(8, 28, 3);
+      // shelf B
+      L.plat(1, 33, 14);
+      L.lantern(9, 34, 5); L.petal(3, 35, '2-Fb');
+      L.plat(17, 35, 3); L.plat(21, 38, 2); L.plat(15, 40, 4); L.plat(9, 42, 4); L.plat(3, 44, 4);
+      L.embers(17, 36, 3); L.embers(15, 41, 3); L.embers(9, 43, 3);
+      L.drip(12, 46);
+      // shelf C, blocked by boulder b
+      L.plat(1, 47, 15);
+      L.lantern(2, 48, 0);
+      L.switchCrystal(5, 48, 'b'); L.boulder(9, 48, 'b'); L.fill(7, 50, 6, 1);
+      L.plat(18, 50, 3); L.plat(13, 53, 3); L.plat(7, 56, 4);
+      L.embers(18, 51, 3); L.embers(13, 54, 3);
+      L.petal(20, 53, '2-Fc'); L.crystal(19, 51);
+      L.exit(8, 57);
+    },
+  },
 ];
 
 export const LEVELS = DEFS.map(buildLevel);

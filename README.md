@@ -6,12 +6,15 @@ and Pip, the last ember of the Great Hearth.
 All art, music and sound are made by code inside this project, so there are no
 image or audio files to license.
 
-## What's playable now (v0.3 prototype)
+## What's playable now (v0.4 prototype)
 
 - Opening cutscene, then the **Prologue: Hearthside at Dusk**
 - The "Pip" cutscene, then **Chapter 1: Whispering Woods** (3 levels)
 - **Chapter 1 finale: The Thornwolf**, a boss fight where you light four shrine lanterns
   with Pip's Glow while dodging his charges, pounces and bramble bursts
+- **Chapter 2: Glimmer Caves** (4 levels): dark mines lit only by lanterns and crystals,
+  mine lifts, a runaway mine cart ride, flooded galleries crossed with the **Ember Dash**,
+  and a rising-flood finale where Nell smashes boulders when you light crystal switches
 - Mossback cutscene and the **Pip's Glow** ability, which reveals hidden spirit paths
 - Embers, Memory Petals (story fragments), lantern checkpoints with Grandpa's notes,
   Gloomlings to free, mushroom springs, thorns
@@ -24,7 +27,8 @@ image or audio files to license.
 | --- | --- | --- |
 | Move | Arrow keys or A / D | Left stick or D-pad |
 | Jump (hold for higher) | Space, Z, W or Up | A |
-| Glow (after Chapter 1-2) | X, C or Shift | X or Y |
+| Glow (after Chapter 1-2) | X or C | Y |
+| Ember Dash (after Chapter 2-2) | Shift or V | X or RB |
 | Close a note or petal card | Enter, Down or S | B |
 | Pause | Esc or P | Start |
 | Skip a cutscene | Hold Esc | Hold B |

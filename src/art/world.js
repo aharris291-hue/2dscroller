@@ -6,6 +6,7 @@ import {
   skyGradient, paperCanvas, addTexture, addSheet, tracePoly, wobble,
 } from './paint.js';
 import { INK, drawMossback } from './characters.js';
+import { paintRail, drawNell } from './caves.js';
 
 export const THEMES = {
   village: {
@@ -338,6 +339,8 @@ export function paintTerrain(scene, level, th) {
         paintPlank(ctx, x, y, th, rand, grid[r][col - 1] !== '=', grid[r][col + 1] !== '=');
       } else if (ch === '^') {
         paintThorns(ctx, x, y, th, rand);
+      } else if (ch === 'r') {
+        paintRail(ctx, x, y, TILE, rand, grid[r][col - 1] !== 'r', grid[r][col + 1] !== 'r');
       }
     }
 
@@ -607,6 +610,34 @@ function paintDeco(ctx, d, th, rows) {
         const lx = x - 30 + k * 10;
         ctx.beginPath(); ctx.moveTo(lx, y); ctx.quadraticCurveTo(lx + (rand() - 0.5) * 20, y - h / 2, lx, y - h); ctx.stroke();
       }
+      break;
+    }
+    case 'beam': {
+      // timber mine support: two posts and a crossbeam
+      const h = (d.h || 4) * TILE;
+      ctx.fillStyle = '#6a4a30'; ctx.strokeStyle = INK; ctx.lineWidth = 3;
+      for (const px of [-60, 48]) { ctx.fillRect(x + px, y - h, 14, h); ctx.strokeRect(x + px, y - h, 14, h); }
+      ctx.fillRect(x - 72, y - h - 4, 146, 16); ctx.strokeRect(x - 72, y - h - 4, 146, 16);
+      if (d.lamp !== false) {
+        ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, y - h + 12); ctx.lineTo(x, y - h + 40); ctx.stroke();
+        glow(ctx, x, y - h + 50, 40, '#ffcf7a', 0.6);
+        wash(ctx, blobPoints(x, y - h + 50, 8, 11, rand, 0.05), '#ffd27a', rand, { layers: 2, alpha: 0.95, edge: 0.8 });
+      }
+      break;
+    }
+    case 'shack': {
+      // the mine office where Wick meets Nell
+      wash(ctx, [[x - 110, y], [x - 110, y - 130], [x + 110, y - 130], [x + 110, y]], '#7a5a40', rand, { layers: 3, alpha: 0.85, edge: 0.6 });
+      wash(ctx, [[x - 130, y - 126], [x, y - 190], [x + 130, y - 126]], '#5a4038', rand, { layers: 3, alpha: 0.9, edge: 0.6 });
+      for (let k = 0; k < 5; k++) { ctx.strokeStyle = rgba(INK, 0.4); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x - 110, y - 20 - k * 24); ctx.lineTo(x + 110, y - 20 - k * 24); ctx.stroke(); }
+      glow(ctx, x + 50, y - 80, 50, '#ffcf7a', 0.5);
+      wash(ctx, [[x + 30, y - 60], [x + 30, y - 100], [x + 70, y - 100], [x + 70, y - 60]], '#ffd890', rand, { layers: 2, alpha: 0.9 });
+      ctx.fillStyle = '#e8dcc0'; ctx.fillRect(x - 70, y - 120, 118, 24); ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.strokeRect(x - 70, y - 120, 118, 24);
+      ctx.fillStyle = INK; ctx.font = 'bold 15px Nunito, sans-serif'; ctx.fillText('MINE OFFICE', x - 64, y - 103);
+      break;
+    }
+    case 'sleepingmole': {
+      drawNell(ctx, x, y + 2, 1, { sleep: true, foreman: !!d.foreman });
       break;
     }
     default:

@@ -11,6 +11,9 @@ const SONGS = {
   village: { bpm: 84, chords: [[53, 'maj'], [48, 'maj'], [50, 'min'], [46, 'maj'], [53, 'maj'], [48, 'maj'], [46, 'maj'], [48, 'sus']], seed: 11, melody: 0.7, pad: true },
   woods: { bpm: 96, chords: [[48, 'maj'], [55, 'maj'], [57, 'min'], [53, 'maj'], [48, 'maj'], [55, 'maj'], [53, 'maj'], [55, 'sus']], seed: 21, melody: 0.75, pad: true },
   boss: { bpm: 126, chords: [[57, 'min'], [53, 'maj'], [55, 'maj'], [52, 'maj']], seed: 41, melody: 0.85, pad: true, drums: true },
+  caves: { bpm: 80, chords: [[50, 'min'], [53, 'maj'], [48, 'maj'], [45, 'min'], [50, 'min'], [46, 'maj'], [48, 'sus'], [45, 'maj']], seed: 61, melody: 0.6, pad: true },
+  cart: { bpm: 144, chords: [[52, 'min'], [48, 'maj'], [55, 'maj'], [50, 'maj']], seed: 71, melody: 0.9, pad: false, drums: true },
+  flood: { bpm: 132, chords: [[50, 'min'], [46, 'maj'], [53, 'maj'], [45, 'maj']], seed: 81, melody: 0.85, pad: true, drums: true },
   cutscene: { bpm: 60, chords: [[50, 'min'], [46, 'maj'], [53, 'maj'], [48, 'maj']], seed: 5, melody: 0.35, pad: true },
 };
 const TRIADS = { maj: [0, 4, 7], min: [0, 3, 7], sus: [0, 5, 7] };
@@ -168,6 +171,8 @@ class Audio {
       case 'howl': this.tone({ freq: 300, type: 'triangle', dur: 1.4, vol: 0.12, attack: 0.3, slide: 1.6 }); this.tone({ freq: 450, type: 'sine', at: 0.2, dur: 1.2, vol: 0.06, attack: 0.3, slide: 1.4 }); break;
       case 'thud': this.tone({ freq: 90, dur: 0.35, vol: 0.3, slide: 0.4 }); this.whoosh({ dur: 0.25, vol: 0.12, from: 400, to: 120 }); break;
       case 'bramble': this.whoosh({ dur: 0.12, vol: 0.06, from: 2500, to: 900, q: 2 }); break;
+      case 'dash': this.whoosh({ dur: 0.22, vol: 0.16, from: 800, to: 4000, q: 1.5 }); this.tone({ freq: 520, slide: 2, dur: 0.18, vol: 0.06 }); break;
+      case 'splash': this.whoosh({ dur: 0.5, vol: 0.18, from: 1500, to: 300, q: 0.8 }); break;
       case 'hop': this.tone({ freq: 160, slide: 1.8, dur: 0.12, vol: 0.06 }); break;
       default:
     }

@@ -8,7 +8,7 @@ import { save } from '../game/save.js';
 import { go } from '../game/flow.js';
 import { title, body, panel } from '../ui/ui.js';
 
-const BLIP = { wick: 620, grandpa: 330, pip: 900, mossback: 180, narrator: 480 };
+const BLIP = { wick: 620, grandpa: 330, pip: 900, mossback: 180, narrator: 480, thornwolf: 140, haru: 200, nell: 520 };
 
 export class CutsceneScene extends Phaser.Scene {
   constructor() {
@@ -79,6 +79,10 @@ export class CutsceneScene extends Phaser.Scene {
       this.tweens.add({ targets: [this.titleText, this.subText], alpha: 1, duration: 900 });
       audio.play('lantern');
       this.waitUntil = this.time.now + 1200;
+    } else if (s.unlock) {
+      save.data[s.unlock] = true;
+      save.write();
+      this.advance();
     } else if (s.wait) {
       this.tweens.add({ targets: this.box, alpha: 0, duration: 200 });
       this.time.delayedCall(s.wait, () => this.advance());
@@ -156,6 +160,7 @@ export class CutsceneScene extends Phaser.Scene {
   finish() {
     if (this.finished) return;
     this.finished = true;
+    for (const st of this.steps) if (st.unlock) save.data[st.unlock] = true;
     save.data.seen[this.id] = true;
     save.write();
     this.cameras.main.fadeOut(500, 18, 13, 20);

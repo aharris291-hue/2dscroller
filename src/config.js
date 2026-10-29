@@ -20,6 +20,8 @@ export const PHYS = {
   maxFall: 1100,
   springSpeed: 1500,
   stompBounce: 700,
+  dashSpeed: 900,
+  dashTime: 0.19, // about 3.5 tiles
 };
 
 export const FONT_TITLE = '"Patrick Hand", "Comic Sans MS", cursive';

@@ -5,7 +5,8 @@
 // Tile letters in the finished grid:
 //   #  soil      B  stone block      =  wooden plank (jump up through it)
 //   ~  spirit platform (only solid while Pip's Glow is shining)
-//   ^  thorns (hurt)     .  empty air
+//   ^  thorns (hurt)     w  water (hurt; Pip hates it)     r  mine-cart rail
+//   .  empty air
 
 export function buildLevel(def) {
   const W = def.width, H = def.height;
@@ -25,6 +26,17 @@ export function buildLevel(def) {
     plat(x, y, w) { for (let i = 0; i < w; i++) set('=', x + i, y); },
     spirit(x, y, w) { for (let i = 0; i < w; i++) set('~', x + i, y); },
     thorns(x, y, w) { for (let i = 0; i < w; i++) set('^', x + i, y); },
+    water(x, y, w, h = 1) { for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) set('w', x + i, y + j); },
+    rail(x, y, w) { for (let i = 0; i < w; i++) set('r', x + i, y); },
+    /** A lift w tiles wide that travels dx tiles right and dy tiles up, then back. */
+    mover(x, y, w, dx, dy, speed = 80) { ent('mover', x, y, { w, dx, dy, speed }); },
+    crystal(x, y) { ent('crystal', x, y); },
+    /** A crystal switch; lighting it with Glow makes Nell break the boulder with the same id. */
+    switchCrystal(x, y, id) { ent('switch', x, y, { id }); },
+    boulder(x, y, id) { ent('boulder', x, y, { id }); },
+    /** A stalactite hanging just under the ceiling tile above (x, y). */
+    drip(x, y) { ent('drip', x, y); },
+    nell(x, y, lines = []) { ent('nell', x, y, { lines }); },
     embers(x, y, n = 1, dx = 1, dy = 0) { for (let i = 0; i < n; i++) ent('ember', x + i * dx, y + i * dy); },
     petal(x, y, id) { ent('petal', x, y, { id }); },
     start(x, y) { ent('start', x, y); },

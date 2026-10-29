@@ -3,17 +3,31 @@
 import { LEVELS } from '../src/levels/levels.js';
 
 const SOLID = '#B';
-const FLOOR = '#B=~'; // things Wick can stand on (spirit platforms assume Glow)
+const FLOOR = '#B=~r'; // things Wick can stand on (spirit platforms assume Glow, r = rail)
 
 function check(level) {
-  const { grid, entities } = level;
+  const { entities } = level;
+  const grid = level.grid.map((r) => [...r]);
   const H = grid.length, W = grid[0].length;
+  // A lift counts as floor everywhere along its path.
+  for (const m of entities.filter((e) => e.type === 'mover')) {
+    const n = Math.max(Math.abs(m.dx), Math.abs(m.dy), 1);
+    for (let t = 0; t <= n; t++) {
+      for (let i = 0; i < m.w; i++) {
+        const x = m.x + i + Math.round((t * m.dx) / n), y = m.y + Math.round((t * m.dy) / n);
+        if (grid[H - 1 - y] && grid[H - 1 - y][x] === '.') grid[H - 1 - y][x] = '=';
+      }
+    }
+  }
   const at = (x, y) => (x < 0 || x >= W ? '#' : y < 0 ? '.' : y >= H ? '.' : grid[H - 1 - y][x]);
-  const canStand = (x, y) => at(x, y) !== '^' && !SOLID.includes(at(x, y)) && !SOLID.includes(at(x, y + 1)) && FLOOR.includes(at(x, y - 1));
+  const canStand = (x, y) => at(x, y) !== '^' && at(x, y) !== 'w' && !SOLID.includes(at(x, y)) && !SOLID.includes(at(x, y + 1)) && FLOOR.includes(at(x, y - 1));
   const springs = new Set(entities.filter((e) => e.type === 'spring').map((e) => `${e.x},${e.y}`));
   // Max tiles across for a jump that ends dy tiles higher (negative = lower).
   // From PHYS: a flat jump carries ~5.2 tiles, so 4 leaves a comfortable margin.
-  const reach = (dy) => (dy >= 3 ? 3 : dy === 2 ? 3 : dy >= -1 ? 4 : dy >= -3 ? 5 : 6);
+  const baseReach = (dy) => (dy >= 3 ? 3 : dy === 2 ? 3 : dy >= -1 ? 4 : dy >= -3 ? 5 : 6);
+  // The Ember Dash adds about 3.5 tiles of sideways travel to any jump.
+  const reach = (dy) => baseReach(dy) + (level.dash ? (dy >= 3 ? 2 : 3) : 0);
+  const forwardOnly = level.mode === 'cart';
   const start = entities.find((e) => e.type === 'start');
   const exit = entities.find((e) => e.type === 'exit');
 
@@ -35,7 +49,7 @@ function check(level) {
     const maxUp = spring ? 8 : 3;
     for (let dy = -H; dy <= maxUp; dy++) {
       const r = spring ? 5 : reach(dy);
-      for (let dx = -r; dx <= r; dx++) {
+      for (let dx = forwardOnly ? 1 : -r; dx <= r; dx++) {
         const nx = x + dx, ny = y + dy;
         const k = `${nx},${ny}`;
         if (seen.has(k) || !canStand(nx, ny) || !clear(x, y, nx, ny)) continue;

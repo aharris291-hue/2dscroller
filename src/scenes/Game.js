@@ -8,6 +8,7 @@ import { save } from '../game/save.js';
 import { Bubble } from '../ui/ui.js';
 import { PIP_BARKS, WICK_BARKS } from '../story/script.js';
 import { Thornwolf } from '../game/thornwolf.js';
+import { CaveSystems } from '../game/cave.js';
 
 const approach = (v, target, step) => (v < target ? Math.min(v + step, target) : Math.max(v - step, target));
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -37,6 +38,9 @@ export class GameScene extends Phaser.Scene {
     this.comboTimer = 0;
     this.glowCooldown = 0;
     this.castTimer = 0;
+    this.dashTime = 0;
+    this.dashReady = true;
+    this.dashCooldown = 0;
     this.facing = 1;
     this.wasGround = true;
     this.airTime = 0;
@@ -50,6 +54,13 @@ export class GameScene extends Phaser.Scene {
     this.buildPlayer();
     this.buildAtmosphere();
     if (L.boss) this.buildBoss();
+    this.cave = new CaveSystems(this);
+    if (L.dark) this.near.setDepth(43);
+    if (L.mode === 'cart') {
+      // ride higher so Wick shows above the rim of the cart
+      this.player.body.setOffset(43, 80);
+      this.player.y -= 21;
+    }
 
     this.bubble = new Bubble(this);
     this.pipBubble = new Bubble(this);
@@ -93,7 +104,7 @@ export class GameScene extends Phaser.Scene {
     for (const { key, x } of L._painted.back) this.add.image(x, 0, key).setOrigin(0).setDepth(10);
 
     // An invisible tilemap does the collision work.
-    const data = L.grid.map((row) => [...row].map((ch) => (ch === '#' || ch === 'B' ? 0 : ch === '=' ? 1 : -1)));
+    const data = L.grid.map((row) => [...row].map((ch) => (ch === '#' || ch === 'B' ? 0 : ch === '=' || ch === 'r' ? 1 : -1)));
     const map = this.make.tilemap({ data, tileWidth: TILE, tileHeight: TILE });
     const tiles = map.addTilesetImage('collide', 'collide', TILE, TILE, 0, 0);
     this.layer = map.createLayer(0, tiles, 0, 0).setVisible(false);
@@ -307,6 +318,7 @@ export class GameScene extends Phaser.Scene {
     }
     this.updateEnemies(dt);
     if (this.boss && !this.frozen && !this.completed) this.boss.update(dt, this.player);
+    this.cave.update(dt);
     this.updateCompanions(time / 1000);
     this.events.emit('tick');
   }
@@ -345,11 +357,40 @@ export class GameScene extends Phaser.Scene {
     this.wasGround = onGround;
     this.jumpBuffer = c.pressed('jump') ? PHYS.jumpBuffer : this.jumpBuffer - dt;
 
-    const dir = (c.down('right') ? 1 : 0) - (c.down('left') ? 1 : 0);
+    // Ember Dash: a short burst through the air, once per jump.
+    const cart = this.level.mode === 'cart';
+    const canDash = (save.data.dash || this.level.dash) && this.hasPip && !cart;
+    this.dashCooldown -= dt;
+    if (onGround) this.dashReady = true;
+    if (this.dashTime > 0) {
+      this.dashTime -= dt;
+      b.setVelocity(this.facing * PHYS.dashSpeed, 0);
+      this.sparkle.explode(2, pl.x - this.facing * 12, pl.y - 26);
+      if (this.dashTime <= 0) {
+        b.setAllowGravity(true);
+        b.setVelocityX(this.facing * PHYS.runSpeed);
+      }
+      if (pl.anims.currentAnim?.key !== 'wick-jump') pl.play('wick-jump');
+      return;
+    }
+    if (canDash && c.pressed('dash') && this.dashReady && this.dashCooldown <= 0) {
+      this.dashTime = PHYS.dashTime;
+      this.dashReady = false;
+      this.dashCooldown = 0.3;
+      b.setAllowGravity(false);
+      b.setVelocity(this.facing * PHYS.dashSpeed, 0);
+      this.jumpHeld = false;
+      audio.play('dash');
+      if (this.pip) this.tweens.add({ targets: this.pip, scale: 0.9, duration: 90, yoyo: true });
+      return;
+    }
+
+    // In the mine cart Wick always rolls forward; she can only jump.
+    const dir = cart ? 1 : (c.down('right') ? 1 : 0) - (c.down('left') ? 1 : 0);
     const accel = dir !== 0
       ? (onGround ? PHYS.groundAccel : PHYS.airAccel)
       : (onGround ? PHYS.groundDecel : PHYS.airDecel);
-    const vx = approach(b.velocity.x, dir * PHYS.runSpeed, accel * dt);
+    const vx = approach(b.velocity.x, dir * (cart ? this.level.cartSpeed || 320 : PHYS.runSpeed), accel * dt);
     b.setVelocityX(vx);
     if (dir) {
       this.facing = dir;
@@ -376,7 +417,7 @@ export class GameScene extends Phaser.Scene {
     let anim;
     if (this.castTimer > 0) { this.castTimer -= dt; anim = 'wick-cast'; }
     else if (!onGround) anim = b.velocity.y < 0 ? 'wick-jump' : 'wick-fall';
-    else if (Math.abs(vx) > 30) anim = 'wick-run';
+    else if (Math.abs(vx) > 30 && !cart) anim = 'wick-run';
     else anim = 'wick-idle';
     if (pl.anims.currentAnim?.key !== anim) pl.play(anim);
 
@@ -385,7 +426,7 @@ export class GameScene extends Phaser.Scene {
 
   updateGlow(dt) {
     this.glowCooldown -= dt;
-    const learned = (save.data.glow || !!this.level.boss) && this.hasPip;
+    const learned = (save.data.glow || !!this.level.boss || this.level.chapter > 1) && this.hasPip;
     if (learned && this.controls.pressed('glow') && this.glowCooldown <= 0) {
       this.glowCooldown = 1.2;
       this.castTimer = 0.35;
@@ -401,6 +442,8 @@ export class GameScene extends Phaser.Scene {
       for (const sh of this.shrines) {
         if (!sh.lit && Phaser.Math.Distance.Between(this.player.x, this.player.y, sh.x, sh.y - 30) < 140) this.lightShrine(sh);
       }
+      this.cave.onGlow(this.player.x, this.player.y);
+      this.cave.boost = 2.5;
       if (Math.random() < 0.5) this.pipSay('glow');
     }
     for (const s of this.spirits) {
@@ -461,7 +504,7 @@ export class GameScene extends Phaser.Scene {
   solidAt(x, y) {
     const c = Math.floor(x / TILE), r = Math.floor(y / TILE);
     if (c < 0 || c >= this.cols || r < 0 || r >= this.rows) return false;
-    return '#B='.includes(this.level.grid[r][c]);
+    return '#B=r'.includes(this.level.grid[r][c]);
   }
 
   // ------------------------------------------------------------ interactions
@@ -540,6 +583,8 @@ export class GameScene extends Phaser.Scene {
     for (const h of this.hazards) {
       if (Phaser.Geom.Rectangle.Overlaps(box, h)) { this.hurt(false); return; }
     }
+    const hit = this.cave.hits(box);
+    if (hit) { this.hurt(hit === 'water'); return; }
     const now = this.time.now;
     this.dynHazards = this.dynHazards.filter((h) => h.to > now);
     for (const h of this.dynHazards) {
@@ -620,6 +665,8 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.shake(180, 0.006);
     if (!fell) this.soot.explode(16, pl.x, pl.y - 20);
     pl.body.setVelocity(0, 0);
+    pl.body.setAllowGravity(true);
+    this.dashTime = 0;
     pl.body.enable = false;
     pl.setTint(0x8a7aa0);
     this.tweens.add({ targets: pl, alpha: 0, duration: 400 });
@@ -642,6 +689,7 @@ export class GameScene extends Phaser.Scene {
         this.tweens.add({ targets: pl, alpha: 0.4, duration: 90, yoyo: true, repeat: 3 });
         if (fell) this.pipSay('fall');
         this.boss?.onPlayerRespawn(this.checkpoint);
+        this.cave.onRespawn(this.checkpoint);
       });
     });
   }
