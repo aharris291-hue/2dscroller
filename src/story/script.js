@@ -11,6 +11,9 @@ export const SPEAKERS = {
   haru: { name: 'Haru', color: '#8a8070' },
   nell: { name: 'Nell', color: '#c9a030' },
   wren: { name: 'Wren', color: '#a8784a' },
+  morrow: { name: 'Morrow', color: '#6a6470' },
+  ash: { name: 'Grandmother Ash', color: '#e8762a' },
+  ember: { name: 'New Ember', color: '#e8762a' },
 };
 
 // Cutscenes are lists of steps. `shot` changes the painted panel, `say` shows a
@@ -182,9 +185,122 @@ Object.assign(CUTSCENES, {
     { say: 'wick', text: 'Pip. Those wings. Wrapped around the Hearth.' },
     { say: 'pip', text: '...Morrow.' },
     { say: 'wren', text: "This is as far as an old owl goes. Here, take this letter. Deliver it for me. In person." },
-    { title: 'End of Chapter 3', sub: 'Thank you for playing! Chapter 4: The Hollow Heart is on its way.' },
+    { title: 'End of Chapter 3', sub: 'Next: Chapter 4, The Hollow Heart' },
   ],
 });
+
+Object.assign(CUTSCENES, {
+  C9a: [
+    { shot: 'root-gate' },
+    { say: 'narrator', text: 'Inside the Great Hearth, the roots are cathedral-tall, and the Hush is thick as wool.' },
+    { say: 'wick', text: "Pip, your light's getting smaller." },
+    { say: 'pip', text: "It's the grey. It's heavy. Stay close to the lanterns, Wick." },
+    { say: 'wick', text: "I'm right here. We do this together." },
+  ],
+  C9: [
+    { shot: 'hall-of-sleepers' },
+    { say: 'wick', text: "I can't do this. I don't know how. Grandpa should be here. Anyone should be here instead of me." },
+    { say: 'pip', text: 'Wick. Do you know why I fell into YOUR lantern?' },
+    { say: 'wick', text: '...Luck?' },
+    { say: 'pip', text: 'She sent me. Grandmother Ash. When Morrow wrapped her up, she used the last of her breath to throw one spark out into the dark. Me.' },
+    { say: 'pip', text: 'She said: "Find the one who keeps the lights. The one who doesn\'t give up."' },
+    { say: 'wick', text: 'That was Grandpa.' },
+    { say: 'pip', text: 'Grandpa gave you his lantern. It was always going to be you.' },
+    { shot: 'hearthsong' },
+    { unlock: 'song' },
+    { title: 'Hearthsong', sub: 'Glow now rings out in a song that calms every Gloomling nearby.' },
+  ],
+  C9b: [
+    { shot: 'dream-fall' },
+    { say: 'pip', text: 'Wick, this ember is warm. Warmer than the others. Touch it with me.' },
+    { say: 'narrator', text: 'The roots fall away. Everything turns gold and soft, like late afternoon. This is a memory: hers.' },
+  ],
+  C9c: [
+    { shot: 'ash-memory' },
+    { say: 'ash', text: 'Morrow. My dear, serious friend. Do not be afraid of endings.' },
+    { say: 'morrow', text: 'Everything that burns goes out. Not you. I will not let you.' },
+    { shot: 'ash-wrapped' },
+    { say: 'narrator', text: 'He wrapped her in his wings so gently. Too gently to notice she could no longer breathe.' },
+    { say: 'ash', text: '...Little spark. Go. Find the keeper.' },
+    { say: 'pip', text: "That was me. That was the night I fell. Wick... he didn't mean to hurt her." },
+    { say: 'wick', text: 'I know. Let\'s go tell him.' },
+  ],
+  C10a: [
+    { shot: 'morrow-reveal' },
+    { say: 'morrow', text: 'Little candle. You came all this way to take her from me.' },
+    { say: 'wick', text: "I came to give her back her breath. And I have mail for you." },
+    { say: 'morrow', text: 'Go home. Every light you carry will go out. Go HOME.' },
+  ],
+  C10: [
+    { shot: 'morrow-open' },
+    { say: 'wick', text: "It's yours. You never sent it." },
+    { say: 'wick', text: 'You wanted to keep her safe. I get it. I wanted to fix everything by myself too. But look.' },
+    { shot: 'trail-of-lights' },
+    { say: 'wick', text: "Her fire didn't stay alive because someone guarded it. It stayed alive because everyone kept passing it on." },
+    { say: 'morrow', text: '...If I let go... she will go out.' },
+    { say: 'pip', text: "No, Morrow. She'll just move to another lantern." },
+    { shot: 'morrow-free' },
+    { say: 'wick', text: "She needs you back. Doesn't she." },
+    { say: 'pip', text: '...Yes.' },
+    { say: 'wick', text: 'Okay. Okay. Thank you for finding me.' },
+    { say: 'pip', text: 'Thank you for not giving up, keeper.' },
+    { shot: 'ash-wakes' },
+    { wait: 1500 },
+    { say: 'ash', text: 'Lantern-keeper. You carried my heart all this way.' },
+    { say: 'wick', text: "It wasn't just me." },
+    { say: 'ash', text: 'No. That is exactly why it worked.' },
+    { say: 'ash', text: 'Hello, old friend. You may stay. But no more wings around me, hm?' },
+  ],
+  C11: [
+    { shot: 'montage-woods' },
+    { say: 'narrator', text: 'Warmth rolled out through the roots and across the valley, and the Hush melted like frost.' },
+    { shot: 'montage-mine' },
+    { say: 'nell', text: 'MUM!' },
+    { shot: 'montage-cliffs' },
+    { say: 'wren', text: 'Three thousand letters! Out of my way, everyone!' },
+    { shot: 'grandpa-wakes' },
+    { say: 'grandpa', text: 'Did I miss anything?' },
+  ],
+  END: [
+    { shot: 'tower-festival' },
+    { say: 'grandpa', text: 'Keeper Wick. Has a ring to it.' },
+    { say: 'wick', text: "Grandpa, it's empty. My lantern. Pip's gone home." },
+    { say: 'grandpa', text: 'Give it a moment, Wicklet.' },
+    { shot: 'new-ember' },
+    { say: 'ember', text: 'Fwip?' },
+    { say: 'wick', text: 'Hi.' },
+    { title: 'Ember Hollow', sub: 'The End' },
+  ],
+});
+
+// Credits, top to bottom. Kinds: title, head (heading), line, gap.
+// Edit the "Created by" line to put your own name in.
+export const CREDITS = [
+  ['title', 'Ember Hollow'],
+  ['gap', ''],
+  ['head', 'Created by'],
+  ['line', '[Your name here]'],
+  ['gap', ''],
+  ['head', 'Story, art, music and code'],
+  ['line', 'Made with Claude, an AI assistant by Anthropic'],
+  ['gap', ''],
+  ['head', 'Starring'],
+  ['line', 'Wick, the lantern-keeper'],
+  ['line', 'Pip, the ember'],
+  ['line', 'Grandpa Tallow  ~  Mossback  ~  Haru'],
+  ['line', 'Nell and the Glimmer Caves miners'],
+  ['line', 'Wren of the Sky Post Office'],
+  ['line', 'Morrow  ~  Grandmother Ash'],
+  ['gap', ''],
+  ['head', 'Built with'],
+  ['line', 'Phaser game engine'],
+  ['line', 'Electron'],
+  ['line', 'Fonts: Patrick Hand and Nunito (SIL Open Font License)'],
+  ['gap', ''],
+  ['head', 'Thank you for playing'],
+  ['line', 'A lantern isn\'t for seeing.'],
+  ['line', "It's so others can see you."],
+];
 
 // One note is tied to each lantern post (checkpoint).
 export const NOTES = [
@@ -235,6 +351,15 @@ export const PETALS = {
   '3-Fa': 'The night of the Hush, the wind stopped everywhere at once.',
   '3-Fb': 'Grey wings, wide as clouds, folded gently around the Great Hearth.',
   '3-Fc': 'Inside, a fire tried to breathe, and could not.',
+  '4-1a': 'Deep in the roots, the Hush is thickest. It smells like a room no one has opened in years.',
+  '4-1b': 'The roots remember every lantern ever lit from them. They hum faintly when Wick walks past.',
+  '4-1c': 'Somewhere above, a great heart beats once every hour, very slowly.',
+  '4-2a': 'The sleepers are every spirit that ever loved the Hearth, gathered close to keep her company.',
+  '4-2b': 'A spark is just a fire that hasn\'t met its kindling yet.',
+  '4-2c': '"Find the keeper," she said, and the spark went looking.',
+  '4-3a': 'In the memory, Ash is young and Morrow is very small, and the valley is full of light.',
+  '4-3b': 'Every spring, Morrow helped her carry flames to the village. He was proud of it.',
+  '4-3c': 'His wings were never meant to smother. They were meant to shelter.',
   '2-Fc': 'In the margin, a small lantern is drawn in a child\'s hand. Under it: "For Mum."',
 };
 
@@ -242,12 +367,15 @@ export const PETALS = {
 export const PIP_BARKS = {
   0: { ember: ['Fwip!', 'Fwip fwip!'], fall: ['Fweee--'], free: ['(happy spin)'], idle: ['(yawns a little spark)'], glow: ['Fwip!'] },
   1: { ember: ['Warm!', 'Warm!', 'More!'], fall: ['Wick?!'], free: ['Go home!', 'Warm now!'], idle: ['Sleepy...?'], glow: ['Look!', 'See?'], water: ['Nope.'] },
+  4: { ember: ['Almost home.', 'Warm. Keep going.', 'She\'s close.'], fall: ['Up we go. Again.'], free: ['Wake up. Someone\'s waiting.', 'Go on, you\'re free.'], idle: ["She's close. I can feel her."], glow: ['Sing with me!', 'Shine!'], water: ['...Fine.'] },
+  5: { ember: ['Fwip!'], fall: ['Fwip?'], free: ['Fwip!'], idle: ['Fwip...'], glow: ['Fwip!'], water: ['Fwip.'] },
   3: { ember: ['That one sang to me.', 'Warm wind!', 'More!'], fall: ['Glide next time!', 'Fwee--'], free: ['There. Better.', 'Fly home!'], idle: ['Nice view.'], glow: ['Shine!', 'Look!'], water: ["I'm brave. I'm brave."] },
   2: { ember: ['More! More!', 'Shiny!', 'More!'], fall: ["We don't do holes."], free: ['Bye, friend!', 'Go home!'], idle: ["Are we lost? We're lost."], glow: ['Bright!', 'Look!'], water: ['NOPE.', 'No water. No.', 'NOPE. Nope nope.'] },
 };
 
 // Wick's one-time reactions.
 export const WICK_BARKS = {
+  lowLight: 'Stay with me, Pip. Find a lantern.',
   firstFree: "Sorry! Sorry. Are you... okay? Oh, look at that. You're okay.",
   firstPit: "Don't look down. Don't look-- I looked.",
 };
@@ -257,4 +385,6 @@ export const CHAPTER_NAMES = {
   1: 'Chapter 1: Whispering Woods',
   2: 'Chapter 2: Glimmer Caves',
   3: 'Chapter 3: Dusk Cliffs',
+  4: 'Chapter 4: The Hollow Heart',
+  5: 'Epilogue: The Lantern Festival',
 };

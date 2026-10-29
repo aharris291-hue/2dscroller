@@ -3,7 +3,7 @@ import { LEVELS } from '../levels/levels.js';
 
 /** The step that starts level `index`, including its intro cutscene. */
 export function levelStep(index) {
-  if (index >= LEVELS.length) return { scene: 'Title', data: {} };
+  if (index >= LEVELS.length) return { scene: 'Credits', data: {} };
   const lvl = LEVELS[index];
   const play = { scene: 'Game', data: { index } };
   return lvl.intro ? { scene: 'Cutscene', data: { id: lvl.intro, next: play } } : play;

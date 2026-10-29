@@ -238,7 +238,7 @@ export class CaveSystems {
       rt.stamp('lightmask', 0, sx, sy, { scale: r / 128, erase: true });
     };
     const pl = s.player;
-    if (pl.visible && pl.alpha > 0.2) hole(pl.x, pl.y - 30, 230 + this.boost * 220);
+    if (pl.visible && pl.alpha > 0.2) hole(pl.x, pl.y - 30, (230 + this.boost * 220) * (s.lightPower ?? 1));
     if (s.pip?.visible) hole(s.pip.x, s.pip.y, 120);
     for (const l of this.lights) if (l.obj.active && l.obj.visible) hole(l.obj.x, l.obj.y + (l.dy || 0), l.r);
     for (const lt of s.lanterns) if (lt.lit) hole(lt.x, lt.y - 50, 280);

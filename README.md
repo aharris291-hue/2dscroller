@@ -6,7 +6,7 @@ and Pip, the last ember of the Great Hearth.
 All art, music and sound are made by code inside this project, so there are no
 image or audio files to license.
 
-## What's playable now (v0.5 prototype)
+## What's playable now (v1.0: the whole story)
 
 - Opening cutscene, then the **Prologue: Hearthside at Dusk**
 - The "Pip" cutscene, then **Chapter 1: Whispering Woods** (3 levels)
@@ -18,6 +18,10 @@ image or audio files to license.
 - **Chapter 3: Dusk Cliffs** (4 levels): crumbling ledges, gloom bats, the **Feather Glide**
   from Wren the post owl, rising wind updrafts, flying kites, and a stormy finale climb
   through lightning
+- **Chapter 4: The Hollow Heart** (4 levels): the Root Halls where Wick's lantern fades,
+  the **Hearthsong** that calms every Gloomling nearby, Ash's Dream, and the three-phase
+  finale with **Morrow, the Ashen Moth**
+- **Epilogue: The Lantern Festival** and the credits
 - Mossback cutscene and the **Pip's Glow** ability, which reveals hidden spirit paths
 - Embers, Memory Petals (story fragments), lantern checkpoints with Grandpa's notes,
   Gloomlings to free, mushroom springs, thorns
@@ -31,7 +35,7 @@ image or audio files to license.
 | Move | Arrow keys or A / D | Left stick or D-pad |
 | Jump (hold for higher) | Space, Z, W or Up | A |
 | Glide (after Chapter 3-2) | Hold jump while falling | Hold A |
-| Glow (after Chapter 1-2) | X or C | Y |
+| Glow (after Chapter 1-2; sings after Chapter 4-2) | X or C | Y |
 | Ember Dash (after Chapter 2-2) | Shift or V | X or RB |
 | Close a note or petal card | Enter, Down or S | B |
 | Pause | Esc or P | Start |
@@ -77,6 +81,11 @@ You only need to do steps 1 to 3 once.
   ```
 
 - **It still won't start**: you can always play in your browser with `npm run dev` instead.
+
+## Put your name in the credits
+
+Open `src/story/script.js`, find `[Your name here]` near the `CREDITS` list, and type your name
+between the quote marks.
 
 ## Where things live (for editing)
 

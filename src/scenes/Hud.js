@@ -51,11 +51,13 @@ export class HudScene extends Phaser.Scene {
     game.events.on('note', this.onNote, this);
     game.events.on('petal', this.onPetal, this);
     game.events.on('shrine', this.onShrine, this);
+    game.events.on('progress', this.onProgress, this);
     game.events.on('tick', this.refresh, this);
     this.events.once('shutdown', () => {
       game.events.off('note', this.onNote, this);
       game.events.off('petal', this.onPetal, this);
       game.events.off('shrine', this.onShrine, this);
+      game.events.off('progress', this.onProgress, this);
       game.events.off('tick', this.refresh, this);
     });
     this.refresh();
@@ -88,7 +90,21 @@ export class HudScene extends Phaser.Scene {
   }
 
   onNote(i) {
+    if (i === undefined || i === null) return;
     this.showCard("Grandpa's note", `"${NOTES[i % NOTES.length]}"`, '#7a5a3c');
+  }
+
+  /** Boss-phase banner: a label and, optionally, a progress bar (0..1). */
+  onProgress(label, value) {
+    if (!this.progLabel) {
+      this.progLabel = title(this, W / 2, 100, '', 26, '#fff6e0');
+      this.progBar = this.add.graphics();
+    }
+    this.progLabel.setText(label);
+    this.progBar.clear();
+    if (value === null || value === undefined) return;
+    this.progBar.fillStyle(0x1a1020, 0.6); this.progBar.fillRoundedRect(W / 2 - 160, 120, 320, 12, 6);
+    this.progBar.fillStyle(0xffc070, 1); this.progBar.fillRoundedRect(W / 2 - 160, 120, 320 * value, 12, 6);
   }
 
   onShrine(count) {

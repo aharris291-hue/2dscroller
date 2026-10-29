@@ -8,7 +8,7 @@ import { save } from '../game/save.js';
 import { go } from '../game/flow.js';
 import { title, body, panel } from '../ui/ui.js';
 
-const BLIP = { wick: 620, grandpa: 330, pip: 900, mossback: 180, narrator: 480, thornwolf: 140, haru: 200, nell: 520, wren: 400 };
+const BLIP = { wick: 620, grandpa: 330, pip: 900, mossback: 180, narrator: 480, thornwolf: 140, haru: 200, nell: 520, wren: 400, morrow: 160, ash: 300, ember: 1000 };
 
 export class CutsceneScene extends Phaser.Scene {
   constructor() {

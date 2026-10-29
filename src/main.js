@@ -13,6 +13,7 @@ import { PauseScene } from './scenes/Pause.js';
 import { OptionsScene } from './scenes/Options.js';
 import { ChaptersScene } from './scenes/Chapters.js';
 import { LevelEndScene } from './scenes/LevelEnd.js';
+import { CreditsScene } from './scenes/Credits.js';
 
 async function start() {
   // Make sure the fonts are ready before any text is drawn.
@@ -32,7 +33,7 @@ async function start() {
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
     physics: { default: 'arcade', arcade: { gravity: { y: PHYS.gravity }, debug: false, tileBias: 32 } },
     input: { gamepad: true },
-    scene: [BootScene, TitleScene, CutsceneScene, GameScene, HudScene, PauseScene, OptionsScene, ChaptersScene, LevelEndScene],
+    scene: [BootScene, TitleScene, CutsceneScene, GameScene, HudScene, PauseScene, OptionsScene, ChaptersScene, LevelEndScene, CreditsScene],
   });
 }
 

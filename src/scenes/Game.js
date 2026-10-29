@@ -6,10 +6,13 @@ import { Controls } from '../game/input.js';
 import { audio } from '../game/audio.js';
 import { save } from '../game/save.js';
 import { Bubble } from '../ui/ui.js';
-import { PIP_BARKS, WICK_BARKS, CUTSCENES } from '../story/script.js';
+import { PIP_BARKS, WICK_BARKS, CUTSCENES, SPEAKERS } from '../story/script.js';
 import { Thornwolf } from '../game/thornwolf.js';
 import { CaveSystems } from '../game/cave.js';
 import { CliffSystems } from '../game/cliffs.js';
+import { HeartSystems } from '../game/heart.js';
+import { MorrowBoss } from '../game/morrow.js';
+import { afterLevelStep, go } from '../game/flow.js';
 
 const approach = (v, target, step) => (v < target ? Math.min(v + step, target) : Math.max(v - step, target));
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -57,6 +60,7 @@ export class GameScene extends Phaser.Scene {
     if (L.boss) this.buildBoss();
     this.cave = new CaveSystems(this);
     this.cliffs = new CliffSystems(this);
+    this.heart = new HeartSystems(this);
     this.gliding = false;
     this.feather = this.add.image(0, 0, 'feather').setScale(0.7).setDepth(21).setVisible(false);
     if (L.dark) this.near.setDepth(43);
@@ -100,6 +104,8 @@ export class GameScene extends Phaser.Scene {
     this.mid = this.add.tileSprite(0, 0, VIEW_W, VIEW_H, `mid-${t}`).setOrigin(0).setScrollFactor(0).setDepth(-7);
     this.fogNear = this.add.tileSprite(0, 0, VIEW_W, VIEW_H, `fog-${t}`).setOrigin(0).setScrollFactor(0).setDepth(45).setAlpha(hush * 0.55);
     this.near = this.add.tileSprite(0, 40, VIEW_W, VIEW_H, `near-${t}`).setOrigin(0).setScrollFactor(0).setDepth(50).setAlpha(0.75);
+    // keep dreamy background islands from being mistaken for platforms
+    if (t === 'dream') { this.mid.setAlpha(0.45); this.near.setAlpha(0.3); }
   }
 
   buildTerrain() {
@@ -214,10 +220,10 @@ export class GameScene extends Phaser.Scene {
           this.exit = this.add.image(p.x, p.y + 4, 'gate').setOrigin(0.5, 1).setScale(0.8).setDepth(9);
           break;
         }
-        case 'trigger': this.triggers.push({ x: e.x * TILE, event: e.event }); break;
+        case 'trigger': this.triggers.push({ x: e.x * TILE, event: e.event, who: e.who, text: e.text }); break;
         case 'boss': this.bossPos = p; break;
         case 'shrine': {
-          const s = this.add.sprite(p.x, p.y + 2, 'shrine', 0).setOrigin(0.5, 1).setScale(0.75).setDepth(11);
+          const s = this.add.sprite(p.x, p.y + 2, e.skin || 'shrine', 0).setOrigin(0.5, 1).setScale(0.75).setDepth(11);
           this.shrines.push(s);
           break;
         }
@@ -336,6 +342,8 @@ export class GameScene extends Phaser.Scene {
     if (this.boss && !this.frozen && !this.completed) this.boss.update(dt, this.player);
     this.cave.update(dt);
     this.cliffs.update(dt);
+    this.heart.update(dt);
+    if (this.morrow) this.morrow.update(dt);
     this.updateCompanions(time / 1000);
     this.events.emit('tick');
   }
@@ -480,6 +488,7 @@ export class GameScene extends Phaser.Scene {
         if (!sh.lit && Phaser.Math.Distance.Between(this.player.x, this.player.y, sh.x, sh.y - 30) < 140) this.lightShrine(sh);
       }
       this.cave.onGlow(this.player.x, this.player.y);
+      if (save.data.song || this.level.song) this.hearthsong();
       this.cave.boost = 2.5;
       if (Math.random() < 0.5) this.pipSay('glow');
     }
@@ -566,6 +575,7 @@ export class GameScene extends Phaser.Scene {
       if (Math.abs(s.x - px) < 30 && Math.abs(s.y - py) < 38) {
         this.embers.splice(i, 1);
         this.stats.embers++;
+        this.heart.onEmber();
         audio.play('ember', { combo: this.combo });
         this.combo++;
         this.comboTimer = 0.7;
@@ -629,7 +639,7 @@ export class GameScene extends Phaser.Scene {
     for (const h of this.hazards) {
       if (Phaser.Geom.Rectangle.Overlaps(box, h)) { this.hurt(false); return; }
     }
-    if (this.cliffs.hits(box)) { this.hurt(false); return; }
+    if (this.cliffs.hits(box) || this.morrow?.hits(box)) { this.hurt(false); return; }
     const hit = this.cave.hits(box);
     if (hit) { this.hurt(hit === 'water'); return; }
     const now = this.time.now;
@@ -645,6 +655,13 @@ export class GameScene extends Phaser.Scene {
       this.fired.add(t.event);
       // A trigger named after a cutscene plays it in the middle of the level.
       // Abilities it unlocks (Glow, Glide) are saved by the cutscene itself.
+      if (t.event === 'echo') {
+        // a friend's voice, remembered
+        const name = SPEAKERS[t.who]?.name || '';
+        this.bubble.show(this.player, `${name}: "${t.text}"`, 5, -80);
+        audio.play('petal');
+        continue;
+      }
       if (CUTSCENES[t.event]) {
         if (save.data.seen[t.event]) continue;
         this.playCutscene(t.event, () => this.pipSay('glow'));
@@ -735,6 +752,8 @@ export class GameScene extends Phaser.Scene {
         if (fell) this.pipSay('fall');
         this.boss?.onPlayerRespawn(this.checkpoint);
         this.cave.onRespawn(this.checkpoint);
+        this.morrow?.onPlayerRespawn();
+        this.lightPower = 1;
       });
     });
   }
@@ -757,7 +776,8 @@ export class GameScene extends Phaser.Scene {
     this.recordProgress();
     this.cameras.main.fadeOut(1200, 255, 244, 220);
     this.cameras.main.once('camerafadeoutcomplete', () => {
-      this.scene.start('LevelEnd', { index: this.index, stats: this.stats });
+      if (this.level.skipResults) go(this, afterLevelStep(this.index));
+      else this.scene.start('LevelEnd', { index: this.index, stats: this.stats });
     });
   }
 
@@ -786,6 +806,10 @@ export class GameScene extends Phaser.Scene {
   // ------------------------------------------------------------ boss
 
   buildBoss() {
+    if (this.level.boss === 'morrow') {
+      this.morrow = new MorrowBoss(this, this.bossPos.x, this.bossPos.y);
+      return;
+    }
     this.boss = new Thornwolf(this, this.bossPos.x, this.bossPos.y);
     // He runs along the ground and ignores the wooden planks.
     this.physics.add.collider(this.boss.sprite, this.layer, null, (w, tile) => tile.index !== 1);
@@ -817,7 +841,8 @@ export class GameScene extends Phaser.Scene {
     const count = this.shrines.filter((s) => s.lit).length;
     this.events.emit('shrine', count);
     this.boss?.onShrineLit(count);
-    if (count === this.shrines.length) this.calmBoss();
+    this.morrow?.onShrineLit(count);
+    if (this.boss && count === this.shrines.length) this.calmBoss();
   }
 
   /** A row of thorns bursting out of the ground, travelling away from x. */
@@ -847,6 +872,27 @@ export class GameScene extends Phaser.Scene {
       this.sparkle.explode(50, this.boss.sprite.x, this.boss.sprite.y - 40);
     });
     this.time.delayedCall(3600, () => this.complete());
+  }
+
+  /** Hearthsong: Pip's light rings out in a soft song that calms every Gloomling nearby. */
+  hearthsong() {
+    audio.play('song');
+    const ring = this.add.image(this.pip.x, this.pip.y, 'soft').setBlendMode(Phaser.BlendModes.ADD).setTint(0xffd27a).setScale(0.5).setDepth(24);
+    this.tweens.add({ targets: ring, scale: 20, alpha: 0, duration: 1000, onComplete: () => ring.destroy() });
+    for (const e of this.enemies.getChildren()) {
+      if (!e.freed && e.body && Phaser.Math.Distance.Between(e.x, e.y, this.player.x, this.player.y) < 380) this.freeEnemy(e);
+    }
+  }
+
+  /** Wick reaches the flame Morrow has been hiding: the finale's cutscene follows. */
+  reachMorrow() {
+    if (this.completed) return;
+    this.frozen = true;
+    this.player.body.setVelocity(0, 0);
+    this.player.body.setAllowGravity(false);
+    this.sparkle.explode(60, this.morrow.sprite.x, this.morrow.sprite.y);
+    this.morrow.warnings.clear();
+    this.time.delayedCall(900, () => this.complete());
   }
 
   /** Jump back to the most recent lantern (used by the pause menu). */

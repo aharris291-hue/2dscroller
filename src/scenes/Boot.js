@@ -4,6 +4,7 @@ import { createPropTextures } from '../art/world.js';
 import { createThornwolfTextures } from '../art/thornwolf.js';
 import { createCaveTextures } from '../art/caves.js';
 import { createCliffTextures } from '../art/cliffs.js';
+import { createHeartTextures } from '../art/heart.js';
 import { addSheet } from '../art/paint.js';
 import { TILE } from '../config.js';
 import { save } from '../game/save.js';
@@ -20,6 +21,7 @@ export class BootScene extends Phaser.Scene {
     createThornwolfTextures(this);
     createCaveTextures(this);
     createCliffTextures(this);
+    createHeartTextures(this);
     addSheet(this, 'collide', TILE, TILE, 2, () => {});
     if (save.data.settings.fullscreen) setFullscreen(this.game, true, true);
     this.scene.start('Title');

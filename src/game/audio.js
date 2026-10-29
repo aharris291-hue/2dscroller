@@ -16,6 +16,11 @@ const SONGS = {
   flood: { bpm: 132, chords: [[50, 'min'], [46, 'maj'], [53, 'maj'], [45, 'maj']], seed: 81, melody: 0.85, pad: true, drums: true },
   cliffs: { bpm: 90, chords: [[52, 'min'], [48, 'maj'], [55, 'maj'], [50, 'maj'], [52, 'min'], [45, 'min'], [48, 'maj'], [50, 'sus']], seed: 91, melody: 0.7, pad: true },
   storm: { bpm: 138, chords: [[45, 'min'], [53, 'maj'], [48, 'maj'], [55, 'maj']], seed: 101, melody: 0.9, pad: true, drums: true },
+  heart: { bpm: 70, chords: [[45, 'min'], [41, 'maj'], [43, 'maj'], [40, 'min'], [45, 'min'], [50, 'min'], [52, 'sus'], [52, 'maj']], seed: 111, melody: 0.5, pad: true },
+  dream: { bpm: 76, chords: [[53, 'maj'], [57, 'min'], [50, 'min'], [48, 'maj'], [46, 'maj'], [53, 'maj'], [48, 'sus'], [48, 'maj']], seed: 121, melody: 0.8, pad: true },
+  morrow: { bpm: 120, chords: [[50, 'min'], [46, 'maj'], [43, 'min'], [45, 'maj']], seed: 131, melody: 0.85, pad: true, drums: true },
+  festival: { bpm: 104, chords: [[48, 'maj'], [53, 'maj'], [55, 'maj'], [48, 'maj'], [45, 'min'], [53, 'maj'], [55, 'sus'], [48, 'maj']], seed: 141, melody: 0.9, pad: true },
+  credits: { bpm: 72, chords: [[48, 'maj'], [52, 'min'], [53, 'maj'], [55, 'maj'], [45, 'min'], [53, 'maj'], [55, 'sus'], [48, 'maj']], seed: 151, melody: 0.7, pad: true },
   cutscene: { bpm: 60, chords: [[50, 'min'], [46, 'maj'], [53, 'maj'], [48, 'maj']], seed: 5, melody: 0.35, pad: true },
 };
 const TRIADS = { maj: [0, 4, 7], min: [0, 3, 7], sus: [0, 5, 7] };
@@ -176,6 +181,7 @@ class Audio {
       case 'dash': this.whoosh({ dur: 0.22, vol: 0.16, from: 800, to: 4000, q: 1.5 }); this.tone({ freq: 520, slide: 2, dur: 0.18, vol: 0.06 }); break;
       case 'splash': this.whoosh({ dur: 0.5, vol: 0.18, from: 1500, to: 300, q: 0.8 }); break;
       case 'thunder': this.whoosh({ dur: 1.4, vol: 0.3, from: 300, to: 60, q: 0.5 }); this.tone({ freq: 55, dur: 1.2, vol: 0.2, slide: 0.6 }); break;
+      case 'song': [67, 71, 74, 79, 83, 86].forEach((n, i) => this.bell(n, i * 0.12, 0.08)); [55, 59, 62].forEach((n) => this.tone({ freq: midi(n), dur: 1.6, vol: 0.05, attack: 0.2 })); break;
       case 'hop': this.tone({ freq: 160, slide: 1.8, dur: 0.12, vol: 0.06 }); break;
       default:
     }

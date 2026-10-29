@@ -43,6 +43,19 @@ export const THEMES = {
     soil: '#6a4448', grass: ['#c8a070', '#9a7048', '#6a4a30'], rock: '#8a7a88', wood: '#8a5a3a',
     midKind: 'cliffs', hearth: true, fog: '#8a80a0', light: '#ffd8a0', particle: 0xd0d8ff,
   },
+  dream: {
+    sky: [[0, '#f2cfe4'], [0.5, '#f8e2c8'], [1, '#fff4dc']],
+    sun: { x: 0.5, y: 0.28, r: 90, color: '#fff6d0' },
+    clouds: '#ffffff', far: '#e6c4d6', mid: '#d4abc4', near: '#a07890',
+    soil: '#c89aa0', grass: ['#ffe0a8', '#f4b888', '#d89078'], rock: '#d8c0c8', wood: '#c8a080',
+    midKind: 'dream', hearth: false, fog: '#fff0f4', light: '#fff4c0', particle: 0xffe0f0,
+  },
+  festival: {
+    sky: [[0, '#141436'], [0.6, '#3a2a5a'], [1, '#6a3a5a']],
+    sun: null, clouds: '#4a3a6a', far: '#3a3058', mid: '#2a2240', near: '#140f20',
+    soil: '#5a3a30', grass: ['#a8b85a', '#7a9a48', '#55743a'], rock: '#8a7c84', wood: '#a8743f',
+    midKind: 'village', hearth: true, fog: '#6a6088', light: '#ffd29a', particle: 0xffd27a,
+  },
   heart: {
     sky: [[0, '#1a0a10'], [1, '#4a1424']],
     sun: null, clouds: null, far: '#3a1420', mid: '#260a14', near: '#12060a',
@@ -198,6 +211,18 @@ function paintMid(th, seed) {
         if (th.midKind === 'crystals') glow(ctx, xx, ground - h * 0.4, 40, '#9fe0ff', 0.25);
       });
     }
+  }
+  if (th.midKind === 'dream') {
+    // floating islands drifting in a warm memory
+    for (let i = 0; i < 7; i++) {
+      const x = rand() * BW, y = 140 + rand() * 300, w = 60 + rand() * 90;
+      wrapped(x, w * 2, (xx) => {
+        wash(ctx, [[xx - w, y], [xx + w, y], [xx + w * 0.4, y + w * 0.8], [xx - w * 0.3, y + w * 0.6]], mix(th.mid, th.far, rand() * 0.5), rand, { layers: 3, alpha: 0.5 });
+        wash(ctx, blobPoints(xx, y - 4, w, 10, rand, 0.15), th.grass[1], rand, { layers: 2, alpha: 0.6 });
+        for (let k = 0; k < 3; k++) wash(ctx, blobPoints(xx - w * 0.5 + k * w * 0.5, y - 30 - rand() * 20, 18 + rand() * 10, 24, rand, 0.2), mix(th.grass[2], th.mid, 0.3), rand, { layers: 2, alpha: 0.6 });
+      });
+    }
+    for (let i = 0; i < 40; i++) glow(ctx, rand() * BW, rand() * BH, 4 + rand() * 6, '#ffffff', 0.7);
   }
   if (th.midKind === 'cliffs') {
     for (let i = 0; i < 6; i++) {

@@ -45,6 +45,10 @@ export function buildLevel(def) {
     bolt(x, y, top, period = 3) { ent('bolt', x, y, { top, period }); },
     /** A gloom bat that swoops `range` tiles either side of (x, y). */
     bat(x, y, range = 3, vrange = 0.6) { ent('bat', x, y, { range, vrange }); },
+    /** A friend's remembered voice, shown when Wick passes column x. */
+    echo(x, who, text) { ent('trigger', x, 0, { event: 'echo', who, text }); },
+    /** A friend standing around (epilogue): sprite key/frame and a line to say. */
+    npc(x, y, key, line, opts = {}) { ent('npc', x, y, { key, line, ...opts }); },
     kite(x, y, w, dx, dy, speed = 70) { ent('mover', x, y, { w, dx, dy, speed, skin: 'kite' }); },
     embers(x, y, n = 1, dx = 1, dy = 0) { for (let i = 0; i < n; i++) ent('ember', x + i * dx, y + i * dy); },
     petal(x, y, id) { ent('petal', x, y, { id }); },
@@ -52,7 +56,7 @@ export function buildLevel(def) {
     lantern(x, y, note) { ent('lantern', x, y, { note }); },
     exit(x, y) { ent('exit', x, y); },
     boss(x, y) { ent('boss', x, y); },
-    shrine(x, y) { ent('shrine', x, y); },
+    shrine(x, y, skin) { ent('shrine', x, y, { skin }); },
     gloom(x, y) { ent('gloomling', x, y); },
     hopper(x, y) { ent('hopper', x, y); },
     spring(x, y) { ent('spring', x, y); },

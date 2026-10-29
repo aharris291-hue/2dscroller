@@ -49,7 +49,7 @@ export class TitleScene extends Phaser.Scene {
     if (desktop) items.push({ label: 'Quit', action: () => quitGame() });
     this.menu = new Menu(this, this.controls, VIEW_W / 2 + 140, 340, items, { size: 38, gap: 58 });
 
-    body(this, VIEW_W - 16, VIEW_H - 14, 'v0.5 prototype', 14, '#f6dcc0').setOrigin(1, 1).setAlpha(0.7);
+    body(this, VIEW_W - 16, VIEW_H - 14, 'v1.0', 14, '#f6dcc0').setOrigin(1, 1).setAlpha(0.7);
     this.add.image(0, 0, 'paper-screen').setOrigin(0).setBlendMode(Phaser.BlendModes.MULTIPLY);
     this.cameras.main.fadeIn(800, 18, 13, 20);
 

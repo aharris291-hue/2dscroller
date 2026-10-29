@@ -514,6 +514,155 @@ const DEFS = [
       L.exit(11, 64);
     },
   },
+  {
+    id: '4-1', chapter: 4, name: 'The Root Halls', theme: 'heart', hush: 0.6, dark: 0.82, fade: true, music: 'heart',
+    width: 200, height: 22, dash: true, glide: true, intro: 'C9a',
+    build(L) {
+      L.ceil(0, 200, 2);
+      L.ground(0, 16, 3); L.start(3, 3); L.lantern(5, 3, 7);
+      L.sign(8, 3, 'The Hush is smothering your lantern. Lit lanterns and embers bring the light back.');
+      L.embers(9, 4, 4);
+      L.echo(12, 'grandpa', "A lantern's not for seeing, Wicklet. It's so others can see you.");
+      L.gloom(14, 3);
+      L.spirit(17, 5, 3); L.spirit(22, 6, 3);
+      L.embers(17, 6, 3); L.petal(23, 9, '4-1a');
+      L.ground(26, 12, 3);
+      L.bat(30, 7, 3); L.lantern(32, 3, 3);
+      L.crumble(39, 4, 2); L.crumble(44, 5, 2);
+      L.embers(39, 6, 2); L.embers(44, 7, 2);
+      L.echo(43, 'mossback', 'Little light... the forest remembers you. Remind... the rest.');
+      L.ground(49, 12, 3);
+      L.hopper(54, 3); L.lantern(58, 3, 2);
+      L.mover(62, 3, 3, 6, 0, 80); L.embers(63, 6, 3);
+      L.echo(64, 'nell', "Go get 'em, candle-kid. And come back, okay?");
+      L.ground(72, 14, 3);
+      L.gloom(76, 3); L.bat(80, 7, 2);
+      L.updraft(87, 3, 2, 10); L.embers(87, 6, 1, 0, 2);
+      L.echo(86, 'wren', "Wind remembers where it's been, dear. Ride it home.");
+      L.ground(90, 10, 11);
+      L.lantern(92, 11, 6); L.petal(95, 14, '4-1b');
+      L.ground(100, 7, 1); L.thorns(100, 1, 7);
+      L.ground(107, 10, 11);
+      L.embers(101, 13, 5);
+      L.ground(117, 30, 3);
+      L.gloom(120, 3); L.gloom(126, 3); L.hopper(132, 3);
+      L.lantern(136, 3, 1);
+      L.spring(140, 3); L.plat(141, 10, 4); L.petal(143, 12, '4-1c');
+      L.spirit(149, 5, 3); L.spirit(154, 6, 3);
+      L.embers(149, 6, 3); L.embers(154, 7, 3);
+      L.bat(156, 9, 3);
+      L.ground(160, 40, 3);
+      L.gloom(170, 3); L.hopper(178, 3); L.lantern(184, 3, 3);
+      L.exit(194, 3);
+    },
+  },
+  {
+    id: '4-2', chapter: 4, name: 'Hall of Sleepers', theme: 'heart', hush: 0.55, dark: 0.7, music: 'heart',
+    width: 180, height: 20, dash: true, glide: true,
+    build(L) {
+      L.ceil(0, 180, 2);
+      L.ground(0, 60, 3); L.start(3, 3); L.lantern(5, 3, 4);
+      L.sleeper(12, 3, '...warm... it used to be so warm...', 0);
+      L.sleeper(20, 3, '...is it spring yet...?', 1);
+      L.deco('statue', 9, 3); L.deco('statue', 23, 3);
+      L.gloom(16, 3); L.gloom(25, 3); L.gloom(28, 3);
+      L.embers(14, 4, 4);
+      L.plat(32, 5, 4); L.plat(38, 7, 4);
+      L.embers(32, 6, 3); L.embers(38, 8, 3);
+      L.bat(35, 11, 3); L.petal(40, 10, '4-2a');
+      L.gloom(44, 3); L.gloom(47, 3); L.hopper(50, 3);
+      L.trigger(57, 'C9');
+      L.sign(61, 3, 'Glow now sings! Every Gloomling nearby will calm down.');
+      L.lantern(63, 3, 0);
+      L.ground(60, 40, 3);
+      L.sleeper(67, 3, '...someone is singing...', 2);
+      L.gloom(70, 3); L.gloom(72, 3); L.gloom(74, 3); L.gloom(76, 3); L.hopper(78, 3);
+      L.ceil(82, 14, 11);
+      L.gloom(85, 3); L.gloom(88, 3); L.gloom(91, 3); L.gloom(94, 3); L.bat(89, 6, 3);
+      L.embers(84, 4, 10);
+      L.spirit(101, 5, 3); L.spirit(106, 6, 3); L.petal(107, 9, '4-2b');
+      L.ground(111, 30, 3);
+      L.lantern(113, 3, 4);
+      L.gloom(118, 3); L.gloom(120, 3); L.gloom(122, 3); L.gloom(124, 3); L.gloom(126, 3); L.hopper(128, 3);
+      L.bat(122, 7, 3);
+      L.sleeper(132, 3, '...thank you, little light...', 0);
+      L.mover(141, 3, 3, 0, 6, 60);
+      L.ground(144, 10, 10); L.petal(150, 12, '4-2c'); L.embers(145, 11, 4);
+      L.ground(154, 26, 3);
+      L.gloom(158, 3); L.gloom(162, 3); L.hopper(166, 3);
+      L.exit(174, 3);
+    },
+  },
+  {
+    id: '4-3', chapter: 4, name: "Ash's Dream", theme: 'dream', hush: 0, music: 'dream',
+    width: 170, height: 24, dash: true, glide: true, intro: 'C9b', outro: 'C9c',
+    build(L) {
+      L.ground(0, 10, 4); L.start(3, 4);
+      L.echo(6, 'ash', 'Little spark. Do you remember the valley when it was young?');
+      L.embers(5, 5, 4);
+      L.fill(13, 6, 5, 1); L.fill(21, 8, 4, 1);
+      L.embers(14, 8, 3); L.embers(21, 10, 3);
+      L.updraft(27, 4, 2, 12); L.embers(27, 8, 1, 0, 3);
+      L.fill(31, 14, 6, 1);
+      L.echo(33, 'morrow', 'Ash. Tell me the names of the stars again.');
+      L.mover(39, 13, 3, 6, 0, 70);
+      L.fill(50, 12, 6, 1); L.petal(52, 15, '4-3a');
+      L.spirit(58, 14, 3); L.spirit(63, 16, 3);
+      L.fill(68, 17, 8, 1);
+      L.echo(70, 'ash', 'Do not be afraid of endings, my dear.');
+      L.lantern(71, 18, 4);
+      L.embers(78, 16, 3); L.embers(82, 13, 3); L.petal(80, 12, '4-3b');
+      L.fill(86, 8, 8, 1);
+      L.updraft(96, 3, 2, 14);
+      L.fill(100, 18, 6, 1);
+      L.echo(102, 'morrow', 'Everything that burns goes out. Not you. Not you.');
+      L.mover(108, 18, 3, 0, -6, 60);
+      L.fill(113, 12, 6, 1);
+      L.crumble(121, 13, 2); L.crumble(126, 14, 2);
+      L.fill(131, 15, 6, 1); L.petal(127, 18, '4-3c');
+      L.lantern(133, 16, 2);
+      L.embers(138, 14, 3); L.embers(142, 10, 3);
+      L.ground(146, 24, 4);
+      L.echo(150, 'ash', '...Little spark. Go. Find the keeper.');
+      L.exit(164, 4);
+    },
+  },
+  {
+    id: '4-F', chapter: 4, name: 'Morrow, the Ashen Moth', theme: 'heart', hush: 0.45, music: 'morrow',
+    width: 30, height: 20, dash: true, glide: true, boss: 'morrow', skipResults: true, intro: 'C10a', outro: 'C10',
+    build(L) {
+      L.fill(0, 3, 1, 17); L.fill(29, 3, 1, 17);
+      L.ground(0, 30, 3); L.start(4, 3);
+      L.boss(14, 12);
+      L.plat(3, 5, 4); L.shrine(4, 6, 'rootlantern');
+      L.plat(23, 5, 4); L.shrine(25, 6, 'rootlantern');
+      L.plat(8, 8, 3); L.shrine(9, 9, 'rootlantern');
+      L.plat(19, 8, 3); L.shrine(20, 9, 'rootlantern');
+      // spirit steps that appear when he opens his wings
+      L.spirit(13, 10, 3);
+      L.embers(11, 4, 2); L.embers(17, 4, 2);
+    },
+  },
+  {
+    id: 'E', chapter: 5, name: 'The Lantern Festival', theme: 'festival', hush: 0, music: 'festival',
+    width: 120, height: 18, pip: false, skipResults: true, intro: 'C11', outro: 'END',
+    build(L) {
+      L.ground(0, 120, 3); L.start(3, 3);
+      L.deco('house', 8, 3); L.deco('mossback', 22, 3); L.deco('house', 40, 3); L.deco('tree', 52, 3);
+      L.deco('house', 70, 3); L.deco('fence', 84, 3); L.deco('house', 92, 3);
+      L.sign(6, 3, 'Light every lantern on the way to the tower.');
+      L.npc(14, 3, 'nell', "Took you long enough, candle-kid! Mum, say hi. MUM. SAY HI.", { scale: 0.55, originY: 140 / 144 });
+      L.npc(17, 3, 'nellmum', 'Hello, little keeper. Thank you for the lantern.', { scale: 0.55, originY: 140 / 144, flip: true });
+      L.npc(30, 3, 'wolf-calm', '(Haru thumps his tail, and all the cedars rustle.)', { scale: 0.5, originY: 232 / 240 });
+      L.npc(48, 3, 'wren', 'Your letter was delivered, dear. In person. I watched.', { scale: 0.45, originY: 156 / 160 });
+      for (const lx of [11, 25, 37, 50, 63, 76, 89]) L.lantern(lx, 3);
+      L.embers(20, 4, 3); L.embers(44, 5, 3); L.embers(68, 4, 3); L.embers(86, 5, 3);
+      L.npc(104, 3, 'grandpa-stand', 'There she is. Keeper Wick.', { scale: 0.55, originY: 166 / 170, flip: true });
+      L.npc(109, 7, 'smallmoth', '(A small grey moth circles the tower lantern, careful not to get too close.)', { scale: 1, originY: 0.5 });
+      L.deco('tower', 112, 3, { lit: true });
+      L.exit(112, 3);
+    },
+  },
 ];
 
 export const LEVELS = DEFS.map(buildLevel);
