@@ -150,7 +150,7 @@ const DEFS = [
   },
   {
     id: '1-3', chapter: 1, name: 'The Bramble Hollow', theme: 'woods', hush: 0.5, music: 'woods',
-    width: 190, height: 18, outro: 'END_DEMO',
+    width: 190, height: 18, outro: 'C4a',
     build(L) {
       L.ground(0, 12, 3); L.start(2, 3);
       L.deco('bigtree', 6, 3);
@@ -191,6 +191,24 @@ const DEFS = [
       L.ground(170, 20, 4);
       L.deco('shrine', 182, 4);
       L.exit(185, 4);
+    },
+  },
+  {
+    id: '1-F', chapter: 1, name: 'The Thornwolf', theme: 'woods', hush: 0.55, music: 'boss',
+    width: 28, height: 18, outro: 'C4', boss: 'thornwolf',
+    build(L) {
+      L.ground(0, 28, 3);
+      L.fill(0, 3, 1, 15); L.fill(27, 3, 1, 15); // walls he crashes into
+      L.start(4, 3);
+      L.boss(21, 3);
+      L.deco('bigtree', 3, 3); L.deco('shrine', 13, 3); L.deco('statue', 9, 3); L.deco('statue', 18, 3);
+      L.plat(2, 5, 4); L.shrine(3, 6);
+      L.plat(22, 5, 4); L.shrine(24, 6);
+      L.plat(7, 8, 3); L.shrine(8, 9);
+      L.plat(18, 8, 3); L.shrine(19, 9);
+      L.spring(13, 3);
+      L.plat(11, 10, 6); L.embers(11, 11, 6);
+      L.embers(6, 4, 2); L.embers(20, 4, 2);
     },
   },
 ];

@@ -30,6 +30,8 @@ export function buildLevel(def) {
     start(x, y) { ent('start', x, y); },
     lantern(x, y, note) { ent('lantern', x, y, { note }); },
     exit(x, y) { ent('exit', x, y); },
+    boss(x, y) { ent('boss', x, y); },
+    shrine(x, y) { ent('shrine', x, y); },
     gloom(x, y) { ent('gloomling', x, y); },
     hopper(x, y) { ent('hopper', x, y); },
     spring(x, y) { ent('spring', x, y); },

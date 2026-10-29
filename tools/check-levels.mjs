@@ -45,9 +45,10 @@ function check(level) {
     }
   }
   const problems = [];
-  if (!seen.has(`${exit.x},${exit.y}`)) problems.push(`exit at (${exit.x},${exit.y}) is NOT reachable`);
+  if (exit && !seen.has(`${exit.x},${exit.y}`)) problems.push(`exit at (${exit.x},${exit.y}) is NOT reachable`);
+  if (!exit && !level.boss) problems.push('level has no exit');
   for (const e of entities) {
-    if (!['ember', 'petal', 'lantern', 'sign', 'sleeper', 'spring'].includes(e.type)) continue;
+    if (!['ember', 'petal', 'lantern', 'sign', 'sleeper', 'spring', 'shrine'].includes(e.type)) continue;
     let ok = false;
     for (const k of seen) {
       const [sx, sy] = k.split(',').map(Number);
@@ -55,10 +56,10 @@ function check(level) {
       if (Math.abs(e.x - sx) <= (up >= 4 ? 2 : 3) && up >= 0 && up <= (springs.has(k) ? 10 : 4)) { ok = true; break; }
     }
     if (!ok) problems.push(`${e.type} at (${e.x},${e.y}) looks unreachable`);
-    if (['lantern', 'sign', 'sleeper', 'spring'].includes(e.type) && !canStand(e.x, e.y)) problems.push(`${e.type} at (${e.x},${e.y}) is not standing on ground`);
+    if (['lantern', 'sign', 'sleeper', 'spring', 'shrine'].includes(e.type) && !canStand(e.x, e.y)) problems.push(`${e.type} at (${e.x},${e.y}) is not standing on ground`);
   }
   if (!canStand(start.x, start.y)) problems.push('start is not on ground');
-  if (!canStand(exit.x, exit.y)) problems.push('exit is not on ground');
+  if (exit && !canStand(exit.x, exit.y)) problems.push('exit is not on ground');
   for (const e of entities) {
     if ((e.type === 'gloomling' || e.type === 'hopper') && !canStand(e.x, e.y)) problems.push(`${e.type} at (${e.x},${e.y}) is not on ground`);
   }

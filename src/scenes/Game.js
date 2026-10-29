@@ -7,6 +7,7 @@ import { audio } from '../game/audio.js';
 import { save } from '../game/save.js';
 import { Bubble } from '../ui/ui.js';
 import { PIP_BARKS, WICK_BARKS } from '../story/script.js';
+import { Thornwolf } from '../game/thornwolf.js';
 
 const approach = (v, target, step) => (v < target ? Math.min(v + step, target) : Math.max(v - step, target));
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -48,6 +49,7 @@ export class GameScene extends Phaser.Scene {
     this.buildEntities();
     this.buildPlayer();
     this.buildAtmosphere();
+    if (L.boss) this.buildBoss();
 
     this.bubble = new Bubble(this);
     this.pipBubble = new Bubble(this);
@@ -137,6 +139,9 @@ export class GameScene extends Phaser.Scene {
     this.embers = [];
     this.petals = [];
     this.lanterns = [];
+    this.shrines = [];
+    this.dynHazards = [];
+    this.boss = null;
     this.signs = [];
     this.sleepers = [];
     this.springs = [];
@@ -195,6 +200,12 @@ export class GameScene extends Phaser.Scene {
           break;
         }
         case 'trigger': this.triggers.push({ x: e.x * TILE, event: e.event }); break;
+        case 'boss': this.bossPos = p; break;
+        case 'shrine': {
+          const s = this.add.sprite(p.x, p.y + 2, 'shrine', 0).setOrigin(0.5, 1).setScale(0.75).setDepth(11);
+          this.shrines.push(s);
+          break;
+        }
         case 'gloomling': {
           const s = this.enemies.create(p.x, p.y, 'gloomling').setOrigin(0.5, 92 / 96).setScale(0.5).setDepth(14);
           s.body.setSize(52, 50).setOffset(22, 42);
@@ -295,6 +306,7 @@ export class GameScene extends Phaser.Scene {
       this.checkTriggers();
     }
     this.updateEnemies(dt);
+    if (this.boss && !this.frozen && !this.completed) this.boss.update(dt, this.player);
     this.updateCompanions(time / 1000);
     this.events.emit('tick');
   }
@@ -373,7 +385,7 @@ export class GameScene extends Phaser.Scene {
 
   updateGlow(dt) {
     this.glowCooldown -= dt;
-    const learned = save.data.glow && this.hasPip;
+    const learned = (save.data.glow || !!this.level.boss) && this.hasPip;
     if (learned && this.controls.pressed('glow') && this.glowCooldown <= 0) {
       this.glowCooldown = 1.2;
       this.castTimer = 0.35;
@@ -385,6 +397,9 @@ export class GameScene extends Phaser.Scene {
         const sp = s.sprite;
         const cx = Phaser.Math.Clamp(this.player.x, sp.x, sp.x + sp.width);
         if (Phaser.Math.Distance.Between(this.player.x, this.player.y, cx, sp.y) < 460) s.timer = 6;
+      }
+      for (const sh of this.shrines) {
+        if (!sh.lit && Phaser.Math.Distance.Between(this.player.x, this.player.y, sh.x, sh.y - 30) < 140) this.lightShrine(sh);
       }
       if (Math.random() < 0.5) this.pipSay('glow');
     }
@@ -525,6 +540,11 @@ export class GameScene extends Phaser.Scene {
     for (const h of this.hazards) {
       if (Phaser.Geom.Rectangle.Overlaps(box, h)) { this.hurt(false); return; }
     }
+    const now = this.time.now;
+    this.dynHazards = this.dynHazards.filter((h) => h.to > now);
+    for (const h of this.dynHazards) {
+      if (h.from <= now && Phaser.Geom.Rectangle.Overlaps(box, h.rect)) { this.hurt(false); return; }
+    }
   }
 
   checkTriggers() {
@@ -621,6 +641,7 @@ export class GameScene extends Phaser.Scene {
         this.jumpHeld = false;
         this.tweens.add({ targets: pl, alpha: 0.4, duration: 90, yoyo: true, repeat: 3 });
         if (fell) this.pipSay('fall');
+        this.boss?.onPlayerRespawn(this.checkpoint);
       });
     });
   }
@@ -639,7 +660,7 @@ export class GameScene extends Phaser.Scene {
     this.player.body.setAllowGravity(false);
     this.player.play('wick-cast');
     audio.play('complete');
-    this.sparkle.explode(40, this.exit.x, this.exit.y - 80);
+    if (this.exit) this.sparkle.explode(40, this.exit.x, this.exit.y - 80);
     this.recordProgress();
     this.cameras.main.fadeOut(1200, 255, 244, 220);
     this.cameras.main.once('camerafadeoutcomplete', () => {
@@ -667,6 +688,72 @@ export class GameScene extends Phaser.Scene {
     if (this.scene.isPaused()) return;
     this.scene.pause();
     this.scene.launch('Pause', { index: this.index });
+  }
+
+  // ------------------------------------------------------------ boss
+
+  buildBoss() {
+    this.boss = new Thornwolf(this, this.bossPos.x, this.bossPos.y);
+    // He runs along the ground and ignores the wooden planks.
+    this.physics.add.collider(this.boss.sprite, this.layer, null, (w, tile) => tile.index !== 1);
+    this.physics.add.overlap(this.player, this.boss.sprite, () => this.onBossTouch());
+    this.time.delayedCall(2200, () => this.pipBubble.show(this.pip, 'Wick! Glow by the shrine lanterns!', 3.2, -24));
+  }
+
+  onBossTouch() {
+    const boss = this.boss;
+    if (this.dead || this.completed || !boss.harmful()) return;
+    const pb = this.player.body;
+    if (pb.velocity.y > 40 && pb.bottom < boss.sprite.body.top + 22) {
+      // Too big to bop, but he won't hurt Wick if she lands on his back.
+      pb.setVelocityY(-PHYS.stompBounce);
+      this.jumpHeld = false;
+      audio.play('hop');
+      return;
+    }
+    this.hurt(false);
+  }
+
+  lightShrine(sh) {
+    sh.lit = true;
+    sh.setFrame(1);
+    const g = this.add.image(sh.x, sh.y - 66, 'soft').setBlendMode(Phaser.BlendModes.ADD).setTint(0xffc060).setScale(4).setAlpha(0.6).setDepth(11);
+    this.tweens.add({ targets: g, alpha: 0.8, duration: 1000, yoyo: true, repeat: -1 });
+    this.sparkle.explode(30, sh.x, sh.y - 66);
+    audio.play('lantern');
+    const count = this.shrines.filter((s) => s.lit).length;
+    this.events.emit('shrine', count);
+    this.boss?.onShrineLit(count);
+    if (count === this.shrines.length) this.calmBoss();
+  }
+
+  /** A row of thorns bursting out of the ground, travelling away from x. */
+  thornWave(x, groundY) {
+    audio.play('bramble');
+    for (const dir of [-1, 1]) {
+      for (let k = 1; k <= 9; k++) {
+        const tx = Math.round((x + dir * k * TILE) / TILE) * TILE + TILE / 2;
+        if (tx < TILE || tx > this.worldW - TILE || !this.solidAt(tx, groundY + 8)) continue;
+        const delay = k * 85;
+        const spike = this.add.image(tx, groundY + 4, 'thornburst').setOrigin(0.5, 1).setScale(1, 0).setDepth(15);
+        this.tweens.add({ targets: spike, scaleY: 1, delay, duration: 90, hold: 380, yoyo: true, onComplete: () => spike.destroy() });
+        this.dynHazards.push({ rect: new Phaser.Geom.Rectangle(tx - 18, groundY - 52, 36, 52), from: this.time.now + delay + 60, to: this.time.now + delay + 520 });
+      }
+    }
+  }
+
+  calmBoss() {
+    this.frozen = true;
+    this.player.body.setVelocityX(0);
+    this.player.play('wick-idle');
+    this.dynHazards = [];
+    audio.play('howl');
+    this.soot.explode(60, this.boss.sprite.x, this.boss.sprite.y - 60);
+    this.time.delayedCall(1800, () => {
+      this.boss.sleep();
+      this.sparkle.explode(50, this.boss.sprite.x, this.boss.sprite.y - 40);
+    });
+    this.time.delayedCall(3600, () => this.complete());
   }
 
   /** Jump back to the most recent lantern (used by the pause menu). */

@@ -7,6 +7,7 @@ import { save } from '../game/save.js';
 import { desktop, quitGame } from '../game/platform.js';
 import { levelStep, go } from '../game/flow.js';
 import { Menu, title, body } from '../ui/ui.js';
+import { LEVELS } from '../levels/levels.js';
 
 export class TitleScene extends Phaser.Scene {
   constructor() {
@@ -48,7 +49,7 @@ export class TitleScene extends Phaser.Scene {
     if (desktop) items.push({ label: 'Quit', action: () => quitGame() });
     this.menu = new Menu(this, this.controls, VIEW_W / 2 + 140, 340, items, { size: 38, gap: 58 });
 
-    body(this, VIEW_W - 16, VIEW_H - 14, 'v0.2 prototype', 14, '#f6dcc0').setOrigin(1, 1).setAlpha(0.7);
+    body(this, VIEW_W - 16, VIEW_H - 14, 'v0.3 prototype', 14, '#f6dcc0').setOrigin(1, 1).setAlpha(0.7);
     this.add.image(0, 0, 'paper-screen').setOrigin(0).setBlendMode(Phaser.BlendModes.MULTIPLY);
     this.cameras.main.fadeIn(800, 18, 13, 20);
 
@@ -61,7 +62,7 @@ export class TitleScene extends Phaser.Scene {
   }
 
   continueIndex() {
-    return Math.min(save.data.unlocked, 4) - 1;
+    return Math.min(save.data.unlocked, LEVELS.length) - 1;
   }
 
   newGame() {

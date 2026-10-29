@@ -6,10 +6,12 @@ and Pip, the last ember of the Great Hearth.
 All art, music and sound are made by code inside this project, so there are no
 image or audio files to license.
 
-## What's playable now (v0.2 prototype)
+## What's playable now (v0.3 prototype)
 
 - Opening cutscene, then the **Prologue: Hearthside at Dusk**
 - The "Pip" cutscene, then **Chapter 1: Whispering Woods** (3 levels)
+- **Chapter 1 finale: The Thornwolf**, a boss fight where you light four shrine lanterns
+  with Pip's Glow while dodging his charges, pounces and bramble bursts
 - Mossback cutscene and the **Pip's Glow** ability, which reveals hidden spirit paths
 - Embers, Memory Petals (story fragments), lantern checkpoints with Grandpa's notes,
   Gloomlings to free, mushroom springs, thorns

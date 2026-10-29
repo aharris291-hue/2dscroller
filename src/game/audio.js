@@ -10,6 +10,7 @@ const SONGS = {
   title: { bpm: 72, chords: [[57, 'min'], [53, 'maj'], [48, 'maj'], [55, 'maj']], seed: 3, melody: 0.55, pad: true },
   village: { bpm: 84, chords: [[53, 'maj'], [48, 'maj'], [50, 'min'], [46, 'maj'], [53, 'maj'], [48, 'maj'], [46, 'maj'], [48, 'sus']], seed: 11, melody: 0.7, pad: true },
   woods: { bpm: 96, chords: [[48, 'maj'], [55, 'maj'], [57, 'min'], [53, 'maj'], [48, 'maj'], [55, 'maj'], [53, 'maj'], [55, 'sus']], seed: 21, melody: 0.75, pad: true },
+  boss: { bpm: 126, chords: [[57, 'min'], [53, 'maj'], [55, 'maj'], [52, 'maj']], seed: 41, melody: 0.85, pad: true, drums: true },
   cutscene: { bpm: 60, chords: [[50, 'min'], [46, 'maj'], [53, 'maj'], [48, 'maj']], seed: 5, melody: 0.35, pad: true },
 };
 const TRIADS = { maj: [0, 4, 7], min: [0, 3, 7], sus: [0, 5, 7] };
@@ -110,7 +111,7 @@ class Audio {
     this.tone({ freq: f * 5.4, at, dur: 0.15, vol: vol * 0.15 });
   }
 
-  whoosh({ at = 0, dur = 0.2, vol = 0.15, from = 600, to = 2000, q = 1 } = {}) {
+  whoosh({ at = 0, dur = 0.2, vol = 0.15, from = 600, to = 2000, q = 1, bus = this.sfxBus } = {}) {
     if (!this.ctx) return;
     const t = this.ctx.currentTime + at;
     const src = this.ctx.createBufferSource();
@@ -123,7 +124,7 @@ class Audio {
     g.gain.setValueAtTime(0.0001, t);
     g.gain.linearRampToValueAtTime(vol, t + dur * 0.3);
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    src.connect(f).connect(g).connect(this.sfxBus);
+    src.connect(f).connect(g).connect(bus);
     src.start(t, Math.random() * 0.5, dur + 0.05);
   }
 
@@ -156,6 +157,17 @@ class Audio {
       case 'confirm': this.tone({ freq: 660, slide: 1.5, dur: 0.15, vol: 0.08 }); break;
       case 'blip': this.tone({ freq: opt.freq || 520, type: 'triangle', dur: 0.04, vol: 0.025 }); break;
       case 'complete': [60, 64, 67, 72, 76, 79, 84].forEach((n, i) => this.bell(n, i * 0.09, 0.08)); break;
+      case 'growl':
+        this.tone({ freq: 70, type: 'sawtooth', dur: 0.7, vol: 0.12, attack: 0.1, slide: 0.8, filter: 400 });
+        this.whoosh({ dur: 0.6, vol: 0.08, from: 200, to: 120, q: 3 });
+        break;
+      case 'roar':
+        this.tone({ freq: 110, type: 'sawtooth', dur: 0.8, vol: 0.18, attack: 0.05, slide: 0.6, filter: 700 });
+        this.whoosh({ dur: 0.7, vol: 0.14, from: 900, to: 250, q: 1 });
+        break;
+      case 'howl': this.tone({ freq: 300, type: 'triangle', dur: 1.4, vol: 0.12, attack: 0.3, slide: 1.6 }); this.tone({ freq: 450, type: 'sine', at: 0.2, dur: 1.2, vol: 0.06, attack: 0.3, slide: 1.4 }); break;
+      case 'thud': this.tone({ freq: 90, dur: 0.35, vol: 0.3, slide: 0.4 }); this.whoosh({ dur: 0.25, vol: 0.12, from: 400, to: 120 }); break;
+      case 'bramble': this.whoosh({ dur: 0.12, vol: 0.06, from: 2500, to: 900, q: 2 }); break;
       case 'hop': this.tone({ freq: 160, slide: 1.8, dur: 0.12, vol: 0.06 }); break;
       default:
     }
@@ -201,6 +213,12 @@ class Audio {
         const n = pool[Math.floor(this.rand() * pool.length)];
         const len = this.rand() < 0.3 ? beat * 2 : beat;
         this.piano(n, at + i * beat + (this.rand() < 0.25 ? beat / 2 : 0), len * 1.6, 0.06);
+      }
+      if (song.drums) {
+        for (let i = 0; i < 4; i++) {
+          if (i % 2 === 0) this.tone({ freq: 120, at: at + i * beat, dur: 0.3, vol: 0.22, slide: 0.35, bus: this.musicBus });
+          this.whoosh({ at: at + i * beat + beat / 2, dur: 0.06, vol: 0.05, from: 6000, to: 8000, q: 1, bus: this.musicBus });
+        }
       }
       this.bar++;
       this.nextBar += barLen;

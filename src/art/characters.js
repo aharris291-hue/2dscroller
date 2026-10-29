@@ -486,3 +486,6 @@ export function createCharacterTextures(scene) {
   a.create({ key: 'gloomling-walk', frames: a.generateFrameNumbers('gloomling', { start: 0, end: 3 }), frameRate: 6, repeat: -1 });
   a.create({ key: 'wisp-float', frames: a.generateFrameNumbers('wisp', { start: 0, end: 1 }), frameRate: 4, repeat: -1 });
 }
+
+// Shared drawing helpers for other character files.
+export { paint, circle, ellipse, limb, eye };

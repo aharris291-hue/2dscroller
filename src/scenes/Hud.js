@@ -22,6 +22,11 @@ export class HudScene extends Phaser.Scene {
     for (let i = 0; i < stats.petalTotal; i++) {
       this.petalIcons.push(this.add.image(54 + i * 34, 92, 'petal', 0).setScale(0.75).setAlpha(0.25));
     }
+    // boss levels: four shrine lanterns to light instead of petals to find
+    this.shrineIcons = [];
+    if (level.boss) {
+      for (let i = 0; i < 4; i++) this.shrineIcons.push(this.add.image(W / 2 - 75 + i * 50, 46, 'shrine', 0).setScale(0.42).setAlpha(0.5));
+    }
     this.glowHint = body(this, W - 24, 24, '', 17, '#fff6e0', { stroke: '#2a1a24', strokeThickness: 4 }).setOrigin(1, 0);
 
     // level banner
@@ -45,10 +50,12 @@ export class HudScene extends Phaser.Scene {
     const game = this.scene.get('Game');
     game.events.on('note', this.onNote, this);
     game.events.on('petal', this.onPetal, this);
+    game.events.on('shrine', this.onShrine, this);
     game.events.on('tick', this.refresh, this);
     this.events.once('shutdown', () => {
       game.events.off('note', this.onNote, this);
       game.events.off('petal', this.onPetal, this);
+      game.events.off('shrine', this.onShrine, this);
       game.events.off('tick', this.refresh, this);
     });
     this.refresh();
@@ -84,6 +91,15 @@ export class HudScene extends Phaser.Scene {
     this.showCard("Grandpa's note", `"${NOTES[i % NOTES.length]}"`, '#7a5a3c');
   }
 
+  onShrine(count) {
+    this.shrineIcons.forEach((icon, i) => {
+      if (i < count && icon.frame.name !== 1) {
+        icon.setFrame(1).setAlpha(1);
+        this.tweens.add({ targets: icon, scale: 0.6, duration: 160, yoyo: true });
+      }
+    });
+  }
+
   onPetal(id) {
     this.showCard('A memory petal', PETALS[id] || '', '#b8607a');
   }
@@ -97,6 +113,6 @@ export class HudScene extends Phaser.Scene {
     const s = this.stats;
     this.emberText.setText(`${s.embers} / ${s.total}`);
     this.petalIcons.forEach((p, i) => p.setAlpha(i < s.petals.length ? 1 : 0.25));
-    this.glowHint.setText(save.data.glow && this.level.pip !== false ? 'Glow: X / C / Y button' : '');
+    this.glowHint.setText((save.data.glow || this.level.boss) && this.level.pip !== false ? 'Glow: X / C / Y button' : '');
   }
 }

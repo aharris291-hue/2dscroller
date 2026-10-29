@@ -5,6 +5,7 @@ import { VIEW_W as W, VIEW_H as H } from '../config.js';
 import { canvas, rng, wash, blobPoints, glow, rgba, granulate, addTexture } from './paint.js';
 import { drawWick, drawPip, drawGrandpa, drawMossback, INK } from './characters.js';
 import { ensureBackground } from './world.js';
+import { drawThornwolf, drawHaruSleeping } from './thornwolf.js';
 
 function layer(scene, ctx, key, dx = 0, dy = 0, alpha = 1) {
   ctx.save();
@@ -136,6 +137,58 @@ const SHOTS = {
     glow(ctx, 1070, 330, 160, '#9affc8', 0.5);
     ctx.restore();
   },
+  'thornwolf-reveal'(scene, ctx, rand) {
+    layer(scene, ctx, 'sky-woods');
+    layer(scene, ctx, 'far-woods');
+    layer(scene, ctx, 'mid-woods', 0, 60);
+    tint(ctx, '#1a1426', 0.55);
+    hush(ctx, rand, 1.2);
+    glow(ctx, 760, 330, 300, '#ff6a4a', 0.18);
+    ground(ctx, 500, '#1e2620', rand);
+    drawThornwolf(ctx, 760, 520, 1.6, { crouch: 0.6, brambles: 1, eyes: 'angry', tail: 1 });
+    drawWick(ctx, 200, 520, 1.9, { eyes: 'worried' });
+    drawPip(ctx, 270, 330, 1.6, { mood: 'worried' });
+  },
+  'haru-fall'(scene, ctx, rand) {
+    layer(scene, ctx, 'sky-woods');
+    layer(scene, ctx, 'far-woods');
+    layer(scene, ctx, 'mid-woods', 0, 60);
+    tint(ctx, '#2a2a3a', 0.25);
+    ground(ctx, 500, '#4a6a3a', rand, ['#6a9a4a', '#4a7a3a']);
+    // brambles falling away as he remembers
+    for (let i = 0; i < 18; i++) {
+      const x = 560 + rand() * 420, y = 360 + rand() * 140;
+      ctx.strokeStyle = rgba('#2e2030', 0.7); ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.quadraticCurveTo(x + 20, y + 20, x + (rand() - 0.5) * 60, y + 30); ctx.stroke();
+    }
+    drawThornwolf(ctx, 780, 520, 1.5, { stun: true, brambles: 0.15, eyes: 'calm' });
+    drawWick(ctx, 290, 520, 2.0, { eyes: 'open', arm: 0.5 });
+    drawPip(ctx, 360, 320, 1.6, {});
+  },
+  'haru-sleep'(scene, ctx, rand) {
+    layer(scene, ctx, 'sky-woods');
+    layer(scene, ctx, 'far-woods');
+    layer(scene, ctx, 'mid-woods', 0, 60);
+    // morning light returns to the forest
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 6; i++) {
+      const x = 200 + i * 180;
+      const g = ctx.createLinearGradient(x, 0, x + 160, 520);
+      g.addColorStop(0, 'rgba(255,240,190,0.16)'); g.addColorStop(1, 'rgba(255,240,190,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + 60, 0); ctx.lineTo(x + 240, 520); ctx.lineTo(x + 150, 520); ctx.fill();
+    }
+    ctx.restore();
+    ground(ctx, 500, '#5a8a42', rand, ['#7aa84c', '#9ccf6a', '#4a7a3a']);
+    // the shrine gate, with Haru curled around it
+    ctx.fillStyle = '#b2523a'; ctx.strokeStyle = INK; ctx.lineWidth = 5;
+    for (const px of [600, 760]) { ctx.fillRect(px, 250, 18, 260); ctx.strokeRect(px, 250, 18, 260); }
+    ctx.beginPath(); ctx.moveTo(560, 250); ctx.lineTo(820, 250); ctx.lineTo(805, 226); ctx.lineTo(575, 226); ctx.closePath(); ctx.fill(); ctx.stroke();
+    drawHaruSleeping(ctx, 690, 520, 1.7);
+    drawWick(ctx, 1080, 520, 1.9, { eyes: 'closed' }, true);
+    drawPip(ctx, 1010, 330, 1.6, {});
+  },
   'woods-end'(scene, ctx, rand) {
     layer(scene, ctx, 'sky-woods');
     layer(scene, ctx, 'far-woods');
@@ -176,11 +229,13 @@ export function portraitTexture(scene, who) {
   const S = 128, c = canvas(S, S), ctx = c.getContext('2d');
   ctx.save();
   ctx.beginPath(); ctx.arc(S / 2, S / 2, S / 2 - 3, 0, Math.PI * 2); ctx.clip();
-  const bg = { wick: '#cfe0d8', grandpa: '#ead8c0', pip: '#3a2a48', mossback: '#c8dcb0' }[who] || '#ddd';
+  const bg = { wick: '#cfe0d8', grandpa: '#ead8c0', pip: '#3a2a48', mossback: '#c8dcb0', thornwolf: '#3a2a3a', haru: '#d8e4c8' }[who] || '#ddd';
   ctx.fillStyle = bg; ctx.fillRect(0, 0, S, S);
   if (who === 'wick') drawWick(ctx, 44, 290, 2.5, {});
   if (who === 'grandpa') drawGrandpa(ctx, 54, 300, 2.4, {});
   if (who === 'pip') drawPip(ctx, 64, 72, 2.6, {});
+  if (who === 'thornwolf') drawThornwolf(ctx, -50, 168, 0.95, { eyes: 'angry', brambles: 1 });
+  if (who === 'haru') drawThornwolf(ctx, -50, 168, 0.95, { eyes: 'calm', brambles: 0 });
   if (who === 'mossback') drawMossback(ctx, -230, 140, 1.2, { eyeOpen: 1 });
   ctx.restore();
   ctx.strokeStyle = INK; ctx.lineWidth = 4;

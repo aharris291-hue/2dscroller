@@ -7,6 +7,8 @@ export const SPEAKERS = {
   pip: { name: 'Pip', color: '#e8762a' },
   mossback: { name: 'Mossback', color: '#5a7a42' },
   narrator: { name: '', color: '#6a5a70' },
+  thornwolf: { name: 'The Thornwolf', color: '#5a3a5a' },
+  haru: { name: 'Haru', color: '#8a8070' },
 };
 
 // Cutscenes are lists of steps. `shot` changes the painted panel, `say` shows a
@@ -58,11 +60,28 @@ export const CUTSCENES = {
     { say: 'mossback', text: 'Take this. The forest has forgotten... how to see. Your light will... remind it.' },
     { title: "Pip's Glow", sub: 'Press X, C or the Y button to glow and reveal spirit paths.' },
   ],
-  END_DEMO: [
+  C4a: [
     { shot: 'woods-end' },
     { say: 'pip', text: 'Wick. Something... big. Ahead.' },
-    { say: 'wick', text: "I hear it too. Whatever it is, it sounds sad." },
-    { title: 'To be continued', sub: 'Chapter 1 finale: The Thornwolf' },
+    { say: 'wick', text: 'I hear it too. Whatever it is, it sounds sad.' },
+    { shot: 'thornwolf-reveal' },
+    { say: 'thornwolf', text: 'The warm ones... TAKE. The fire takes... the forest...' },
+    { say: 'wick', text: "Okay. Okay. It's just a very large, very angry wolf. Fine." },
+    { say: 'pip', text: 'Lanterns! Shrine... lanterns!' },
+    { say: 'wick', text: "Right. If we light the shrine, maybe he'll remember who he is. Pip, get ready to glow." },
+  ],
+  C4: [
+    { shot: 'haru-fall' },
+    { say: 'wick', text: "You weren't angry. You were scared." },
+    { say: 'thornwolf', text: 'The warm ones... take. The fire takes... the forest...' },
+    { say: 'wick', text: 'No. The fire IS the forest.' },
+    { say: 'wick', text: '"Haru, who guards the cedars." That\'s what the shrine says. That\'s you, isn\'t it? Haru.' },
+    { say: 'haru', text: '...Haru.' },
+    { shot: 'haru-sleep' },
+    { wait: 1200 },
+    { say: 'pip', text: 'Wick. Wick... good.' },
+    { say: 'mossback', text: 'The roots... run under the mountains. Go through... the caves.' },
+    { title: 'End of Chapter 1', sub: 'Thank you for playing! Chapter 2: Glimmer Caves is on its way.' },
   ],
 };
 
