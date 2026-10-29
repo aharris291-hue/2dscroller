@@ -137,7 +137,7 @@ You don't need your own PC for this. GitHub builds it on a Windows computer for 
    - `Ember-Hollow-Setup-1.0.1.exe`: the installer for players.
    - `Ember-Hollow-Windows-for-Steam.zip`: the game folder you upload to Steam.
 
-You can also start a build by hand: **Actions → Build Windows installer → Run workflow**.
+You can also start a build by hand: **Actions → Build Windows game → Run workflow**.
 The files then appear at the bottom of that run's page under **Artifacts**.
 
 ## Steam store images
